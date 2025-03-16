@@ -43,3 +43,14 @@ export const getTask = (task: Task, items: Todos['items']): Task => {
         totalCost,
     };
 };
+
+export const moveTask = (id: TaskId, position: number, arr: TaskId[]): TaskId[] => {
+    const currentIndex = arr.indexOf(id);
+    if (currentIndex === -1) return arr;
+
+    const newArr = [...arr];
+    newArr.splice(currentIndex, 1);
+    newArr.splice(position, 0, id);
+
+    return newArr;
+};

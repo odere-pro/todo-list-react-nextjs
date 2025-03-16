@@ -22,9 +22,8 @@ function Toolbar({ children, className }: ToolbarProps) {
             const title = card.parentId ? items[card.parentId].title : 'Todos';
             const url = card.parentId ? `/todos/${card.parentId}` : '/todos';
             setLinkData([title, url]);
-            console.log([title, url], card);
         }
-    }, [items, id])
+    }, [items, id]);
 
     return (
         <div className={`flex justify-between items-center w-full gap-4 ${className}`}>

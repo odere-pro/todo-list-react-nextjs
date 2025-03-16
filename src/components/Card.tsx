@@ -17,15 +17,6 @@ const typesConfig: Record<TaskType, TodoUIConfig> = {
     food: { label: 'Food', emoji: '🍏' },
 };
 
-export const getBorderClass = (locked: boolean) => {
-    const config: Record<string, string> = {
-        default: 'border-neutral-400 dark:border-neutral-500 rounded-bl-lg rounded-br-lg border-t-4',
-        danger: 'border-red-500 rounded-bl-lg rounded-br-lg border-t-4',
-    };
-
-    return locked ? config.danger : config.default;
-};
-
 export const getLockedClass = (locked: boolean) => {
     return locked && 'pointer-events-none opacity-50';
 };
@@ -39,16 +30,22 @@ const Card = ({ createdAt, data, title, locked, completed, type, id, totalCost, 
     const taskLabel = typesConfig[type].label;
     const time = updatedAt || createdAt;
     const minutesAgo = time && getMinutesAgo(time);
+    const headerBorderClass =
+        'border-b-4 border-neutral-400 dark:border-neutral-500 hover:border-indigo-600 dark:hover:border-indigo-600 focus:border-indigo-600 dark:focus:border-indigo-600';
 
     return (
         <div className={`flex flex-col w-full ${getLockedClass(locked)}`}>
-            <Link className="flex justify-between items-center gap-4" href={`/todos/${id}`} tabIndex={locked ? -1 : 0}>
-                <h3 className="text-md truncate text-neutral-900 dark:text-neutral-100 flex-1 border-cyan-500">
+            <Link
+                className={`flex justify-between items-center gap-4 ${headerBorderClass} outline-none`}
+                href={`/todos/${id}`}
+                tabIndex={locked ? -1 : 0}
+            >
+                <h2 className="text-md truncate text-neutral-900 dark:text-neutral-100 flex-1 border-cyan-500">
                     <span className="mr-2">
                         {emoji} <strong>#{id}</strong>
                     </span>
                     {title}
-                </h3>
+                </h2>
 
                 {locked && (
                     <Label type="danger">
@@ -57,7 +54,7 @@ const Card = ({ createdAt, data, title, locked, completed, type, id, totalCost, 
                 )}
             </Link>
 
-            <div className={`gap-4 max-w-4xl p-4 bg-neutral-200 dark:bg-neutral-700 ${getBorderClass(locked)}`}>
+            <div className="gap-4 max-w-4xl p-4 bg-neutral-200 dark:bg-neutral-700 rounded-bl-lg rounded-br-lg">
                 <div className="flex flex-wrap gap-2">
                     <Label value={taskLabel} type="info">
                         type: {taskLabel}

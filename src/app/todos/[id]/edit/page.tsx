@@ -22,9 +22,7 @@ const TodoPage = async ({ params }: { params: { id: string } }) => {
         notFound();
     }
 
-    return (
-        <Card {...data.items[id]} />
-    );
+    return <Card {...data.items[id]} />;
 };
 
 export default TodoPage;

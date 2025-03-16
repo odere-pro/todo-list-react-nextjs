@@ -26,13 +26,15 @@ function Label({ children, value, type = 'default' }: LabelProps) {
 
     if (['empty', 'danger', 'warning'].includes(type))
         return (
-            <span className={`min-w-fit items-center text-sm/normal font-medium ${getColorClass(type)}`}>
+            <span className={`min-w-fit items-center text-sm/normal font-medium ${getColorClass(type)} select-none`}>
                 {children || value}
             </span>
         );
 
     return (
-        <div className={`min-w-fit px-4 rounded-xl items-center text-sm/normal font-medium ${getColorClass(type)}`}>
+        <div
+            className={`min-w-fit px-4 rounded-xl items-center text-sm/normal font-medium ${getColorClass(type)} select-none`}
+        >
             {children || value}
         </div>
     );

@@ -6,7 +6,7 @@ const TodosPage = async () => {
     const headersList = await headers();
     const referer = headersList.get('referer');
 
-    let data: Todos = { items: {}, composition: [] };
+    let data: Todos = { items: {}, topLevelTodos: [] };
 
     if (referer) {
         const url = new URL(referer);
@@ -14,7 +14,7 @@ const TodosPage = async () => {
         data = await res.json();
     }
 
-    if (data.composition.length === 0) {
+    if (data.topLevelTodos.length === 0) {
         return (
             <div className="flex items-center justify-center h-full">
                 <p className="text-lg text-neutral-500 dark:text-neutral-400">Please add first item</p>
@@ -25,7 +25,7 @@ const TodosPage = async () => {
     return (
         <ul role="list" className="w-full flex flex-col gap-4">
             {data &&
-                data.composition.map(
+                data.topLevelTodos.map(
                     (id) =>
                         !data.items[id].parentId && (
                             <li key={id}>
