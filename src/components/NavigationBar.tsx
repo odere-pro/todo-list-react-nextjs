@@ -10,8 +10,6 @@ import { usePathname } from 'next/navigation';
 interface NavigationBarProps {
     className?: string;
     element?: ElementType;
-    backUrl?: string;
-    backTitle?: string;
 }
 
 function NavigationBar(props: NavigationBarProps) {
@@ -49,7 +47,7 @@ function NavigationBar(props: NavigationBarProps) {
                 </div>
             </div>
 
-            <Toolbar title={props.backTitle} backHref={props.backUrl} className="mx-auto max-w-4xl px-[20px] lg:px-4">
+            <Toolbar className="mx-auto max-w-3xl px-[20px] lg:px-4">
                 <button
                     type="button"
                     className="relative inline-flex items-center rounded-md bg-indigo-600 px-3 py-1 text-sm text-neutral-100 shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"

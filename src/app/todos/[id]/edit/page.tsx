@@ -1,9 +1,8 @@
 import Card from '@/components/Card';
-import Toolbar from '@/components/Toolbar';
 import type { Todos } from '@/types/Todos';
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
-import { rootStore } from '@/store/rootStore';
+import { rootStore } from '@/stores/rootStore';
 
 const TodoPage = async ({ params }: { params: { id: string } }) => {
     const { id } = await params;
@@ -23,21 +22,8 @@ const TodoPage = async ({ params }: { params: { id: string } }) => {
         notFound();
     }
 
-    const title = card.parentId ? data.items[card.parentId].title : undefined;
-    const backHref = card.parentId ? `/todos/${card.parentId}` : undefined;
-
     return (
-        <>
-            <Toolbar title={title} backHref={backHref}>
-                <button
-                    type="button"
-                    className="relative inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                >
-                    Add task
-                </button>
-            </Toolbar>
-            <Card {...data.items[id]} />
-        </>
+        <Card {...data.items[id]} />
     );
 };
 

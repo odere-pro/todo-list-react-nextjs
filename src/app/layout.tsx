@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
-import NavigationBar from '../components/NavigationBar';
+import NavigationBar from '@/components/NavigationBar';
+import { RootStoreProvider } from '@/providers/RootStoreProvider';
 
 import './globals.css';
 
@@ -29,13 +30,14 @@ export default function RootLayout({
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased font-[family-name:var(--font-geist-sans)]`}
             >
-                <div className={`flex flex-col min-h-screen gap-4 md:gap-6 bg-neutral-50 dark:bg-neutral-900`}>
-                    <NavigationBar className="sticky top-0 z-50" element="header" />
-
-                    <main className="flex flex-col flex-1 gap-4 px-[20px] lg:px-0 overflow-x-hidden w-full max-w-3xl self-center box-border">
-                        {children}
-                    </main>
-                </div>
+                <RootStoreProvider>
+                    <div className={`flex flex-col min-h-screen bg-neutral-50 dark:bg-neutral-900`}>
+                        <NavigationBar className="sticky top-0 z-50" element="header" />
+                        <main className="flex flex-col flex-1 gap-4 px-[20px] lg:px-0 overflow-x-hidden w-full max-w-3xl self-center box-border">
+                            {children}
+                        </main>
+                    </div>
+                </RootStoreProvider>
             </body>
         </html>
     );

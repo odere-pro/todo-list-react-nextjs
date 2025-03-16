@@ -1,18 +1,35 @@
+'use client';
+
 import Link from 'next/link';
 import { ChevronLeftIcon } from '@heroicons/react/20/solid';
+import { useRootStore } from '@/providers/RootStoreProvider';
+import { useParams } from 'next/navigation';
+import { useState, useEffect } from 'react';
 
 interface ToolbarProps {
-    backHref?: string;
     children?: React.ReactNode;
     className?: string;
-    title?: string;
 }
 
-function Toolbar({ title, backHref, children, className }: ToolbarProps) {
+function Toolbar({ children, className }: ToolbarProps) {
+    const { items } = useRootStore((state) => state);
+    const { id } = useParams();
+    const [[title, url], setLinkData] = useState<[string | undefined, string | undefined]>([undefined, undefined]);
+
+    useEffect(() => {
+        if (id && items && Object.keys(items).length > 0) {
+            const card = items[id as string];
+            const title = card.parentId ? items[card.parentId].title : 'Todos';
+            const url = card.parentId ? `/todos/${card.parentId}` : '/todos';
+            setLinkData([title, url]);
+            console.log([title, url], card);
+        }
+    }, [items, id])
+
     return (
         <div className={`flex justify-between items-center w-full gap-4 ${className}`}>
-            {backHref && (
-                <Link className="flex items-center text-neutral-900 dark:text-neutral-100" href={backHref}>
+            {id && url && (
+                <Link className="flex items-center text-neutral-900 dark:text-neutral-100" href={url}>
                     <ChevronLeftIcon aria-hidden="true" className="size-6 flex-none" />
                     <span>{title}</span>
                 </Link>

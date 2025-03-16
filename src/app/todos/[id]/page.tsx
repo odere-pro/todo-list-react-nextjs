@@ -1,9 +1,8 @@
 import Card from '@/components/Card';
-import Toolbar from '@/components/Toolbar';
 import type { Todos } from '@/types/Todos';
 import { headers } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
-import { rootStore } from '@/store/rootStore';
+import { rootStore } from '@/stores/rootStore';
 
 const TodoPage = async (props: { params: { id: string } }) => {
     const { id } = await props.params;
@@ -27,28 +26,23 @@ const TodoPage = async (props: { params: { id: string } }) => {
     if (noSubtasks) {
         redirect(`/todos/${id}/edit`);
     }
-    const backHref = !card.parentId ? '/todos' : `/todos/${card.parentId}`;
-    const title = !card.parentId ? 'Todos' : data?.items[card.parentId].title;
+
+    if (card.subtasks?.length === 0) {
+        return (
+            <div className="flex items-center justify-center h-full">
+                <p className="text-lg text-neutral-500 dark:text-neutral-400">Please add first item</p>
+            </div>
+        );
+    }
 
     return (
-        <>
-            <Toolbar title={title} backHref={backHref}>
-                <button
-                    type="button"
-                    className="relative inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                >
-                    Add task
-                </button>
-            </Toolbar>
-
-            <ul role="list" className="w-full flex flex-col gap-4">
-                {card.subtasks?.map((id) => (
-                    <li key={id}>
-                        <Card {...data.items[id]} />
-                    </li>
-                ))}
-            </ul>
-        </>
+        <ul role="list" className="w-full flex flex-col gap-4">
+            {card.subtasks?.map((id) => (
+                <li key={id}>
+                    <Card {...data.items[id]} />
+                </li>
+            ))}
+        </ul>
     );
 };
 
