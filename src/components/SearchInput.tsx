@@ -1,17 +1,21 @@
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 
-function SearchInput() {
+interface SearchInputProps {
+    className?: string;
+}
+
+function SearchInput(props: SearchInputProps) {
     return (
-        <div className="grid w-full max-w-lg grid-cols-1 lg:max-w-xs">
+        <div className={`relative flex w-xs md:w-md transition duration-300 bg-neutral-950/25 ${props.className}`}>
             <input
                 name="search"
                 type="search"
                 placeholder="Search"
-                className="col-start-1 row-start-1 block w-full rounded-md bg-white py-1.5 pr-3 pl-10 text-base text-gray-300 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                className="block flex-1 py-2 pr-9 pl-4 text-base text-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
             />
             <MagnifyingGlassIcon
                 aria-hidden="true"
-                className="pointer-events-none col-start-1 row-start-1 ml-3 size-5 self-center text-gray-400"
+                className="absolute right-2 pointer-events-none size-5 self-center text-gray-400"
             />
         </div>
     );
