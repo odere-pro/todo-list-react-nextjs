@@ -1,278 +1,228 @@
 {
-    "items": {
-        "0011": {
-            "locked": false,
-            "completed": false,
-            "cost": 10,
-            "createdAt": "2025-03-15T18:48:29.356Z",
-            "currency": "SEK",
-            "data": {
-                "data 1": "task",
-                "data 2": "task"
-            },
-            "description": "# Project Title\n\n## Introduction\n\nThis is a brief introduction to the project.\n\n## Features\n\n1. Feature one\n2. Feature two\n3. Feature three\n\n## Installation\n\nTo install the project, follow these steps:\n\n```bash\ngit clone https://github.com/your-repo/project.git\ncd project\nnpm install\n```\n\n## Usage\n\n- Step one\n- Step two\n- Step three\n",
-            "parentId": null,
-            "id": "0011",
-            "title": "Has 4 subtasks",
-            "type": "task",
-            "updatedAt": "2025-03-15T18:48:29.356Z",
-            "subtasks": ["0012", "0013"]
-        },
-        "0012": {
-            "locked": false,
-            "completed": false,
-            "cost": 100,
-            "createdAt": "2025-03-15T18:48:29.356Z",
-            "currency": "SEK",
-            "data": {
-                "data 1": "task",
-                "data 2": "task"
-            },
-            "description": "# Project Title\n\n## Introduction\n\nThis is a brief introduction to the project.\n\n## Features\n\n1. Feature one\n2. Feature two\n3. Feature three\n\n## Installation\n\nTo install the project, follow these steps:\n\n```bash\ngit clone https://github.com/your-repo/project.git\ncd project\nnpm install\n```\n\n## Usage\n\n- Step one\n- Step two\n- Step three\n",
-            "parentId": "0011",
-            "id": "0012",
-            "title": "Has 0 subtasks",
-            "type": "task",
-            "updatedAt": "2025-03-15T18:48:29.356Z"
-        },
-        "0013": {
-            "locked": false,
-            "completed": false,
-            "cost": 100,
-            "createdAt": "2025-03-15T18:48:29.356Z",
-            "currency": "SEK",
-            "data": {
-                "data 1": "task",
-                "data 2": "task"
-            },
-            "description": "# Project Title\n\n## Introduction\n\nThis is a brief introduction to the project.\n\n## Features\n\n1. Feature one\n2. Feature two\n3. Feature three\n\n## Installation\n\nTo install the project, follow these steps:\n\n```bash\ngit clone https://github.com/your-repo/project.git\ncd project\nnpm install\n```\n\n## Usage\n\n- Step one\n- Step two\n- Step three\n",
-            "parentId": "0011",
-            "id": "0013",
-            "title": "Has 2 subtasks",
-            "type": "task",
-            "updatedAt": "2025-03-15T18:48:29.356Z",
-            "subtasks": ["0014", "0015"]
-        },
-        "0014": {
-            "locked": false,
-            "completed": false,
-            "cost": 1000,
-            "createdAt": "2025-03-15T18:48:29.356Z",
-            "currency": "SEK",
-            "data": {
-                "data 1": "task",
-                "data 2": "task"
-            },
-            "description": "# Project Title\n\n## Introduction\n\nThis is a brief introduction to the project.\n\n## Features\n\n1. Feature one\n2. Feature two\n3. Feature three\n\n## Installation\n\nTo install the project, follow these steps:\n\n```bash\ngit clone https://github.com/your-repo/project.git\ncd project\nnpm install\n```\n\n## Usage\n\n- Step one\n- Step two\n- Step three\n",
-            "parentId": "0013",
-            "id": "0014",
-            "title": "Has 0 subtasks",
-            "type": "task",
-            "updatedAt": "2025-03-15T18:48:29.356Z"
-        },
-        "0015": {
-            "locked": false,
-            "completed": false,
-            "cost": 1000,
-            "createdAt": "2025-03-15T18:48:29.356Z",
-            "currency": "SEK",
-            "data": {
-                "data 1": "task",
-                "data 2": "task"
-            },
-            "description": "# Project Title\n\n## Introduction\n\nThis is a brief introduction to the project.\n\n## Features\n\n1. Feature one\n2. Feature two\n3. Feature three\n\n## Installation\n\nTo install the project, follow these steps:\n\n```bash\ngit clone https://github.com/your-repo/project.git\ncd project\nnpm install\n```\n\n## Usage\n\n- Step one\n- Step two\n- Step three\n",
-            "parentId": "0013",
-            "id": "0015",
-            "title": "Has 0 subtasks",
-            "type": "task",
-            "updatedAt": "2025-03-15T18:48:29.356Z"
-        },
-        "0007": {
-            "locked": false,
-            "completed": false,
-            "cost": 100,
-            "createdAt": "2025-03-15T18:48:29.356Z",
-            "currency": "USD",
-            "data": {
-                "data 1": "task",
-                "data 2": "task"
-            },
-            "description": "# Project Title\n\n## Introduction\n\nThis is a brief introduction to the project.\n\n## Features\n\n1. Feature one\n2. Feature two\n3. Feature three\n\n## Installation\n\nTo install the project, follow these steps:\n\n```bash\ngit clone https://github.com/your-repo/project.git\ncd project\nnpm install\n```\n\n## Usage\n\n- Step one\n- Step two\n- Step three\n",
-            "parentId": null,
-            "id": "0007",
-            "title": "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqu",
-            "type": "task",
-            "updatedAt": "2025-03-15T18:48:29.356Z"
-        },
-        "0008": {
-            "locked": true,
-            "completed": false,
-            "cost": 100,
-            "createdAt": "2025-03-15T18:48:29.356Z",
-            "currency": "USD",
-            "data": {
-                "data 1": "task",
-                "data 2": "task"
-            },
-            "description": "# Project Title\n\n## Introduction\n\nThis is a brief introduction to the project.\n\n## Features\n\n1. Feature one\n2. Feature two\n3. Feature three\n\n## Installation\n\nTo install the project, follow these steps:\n\n```bash\ngit clone https://github.com/your-repo/project.git\ncd project\nnpm install\n```\n\n## Usage\n\n- Step one\n- Step two\n- Step three\n",
-            "parentId": null,
-            "id": "0008",
-            "title": "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqu",
-            "type": "task",
-            "updatedAt": "2025-03-15T18:48:29.356Z"
-        },
-        "0009": {
-            "locked": false,
-            "completed": true,
-            "cost": 100,
-            "createdAt": "2025-03-15T18:48:29.356Z",
-            "currency": "USD",
-            "data": {
-                "data 1": "task",
-                "data 2": "task"
-            },
-            "description": "# Project Title\n\n## Introduction\n\nThis is a brief introduction to the project.\n\n## Features\n\n1. Feature one\n2. Feature two\n3. Feature three\n\n## Installation\n\nTo install the project, follow these steps:\n\n```bash\ngit clone https://github.com/your-repo/project.git\ncd project\nnpm install\n```\n\n## Usage\n\n- Step one\n- Step two\n- Step three\n",
-            "parentId": null,
-            "id": "0009",
-            "title": "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqu",
-            "type": "task",
-            "updatedAt": "2025-03-15T18:48:29.356Z"
-        },
-        "0010": {
-            "locked": true,
-            "completed": true,
-            "cost": 100,
-            "createdAt": "2025-03-15T18:48:29.356Z",
-            "currency": "USD",
-            "data": {
-                "data 1": "task",
-                "data 2": "task"
-            },
-            "description": "# Project Title\n\n## Introduction\n\nThis is a brief introduction to the project.\n\n## Features\n\n1. Feature one\n2. Feature two\n3. Feature three\n\n## Installation\n\nTo install the project, follow these steps:\n\n```bash\ngit clone https://github.com/your-repo/project.git\ncd project\nnpm install\n```\n\n## Usage\n\n- Step one\n- Step two\n- Step three\n",
-            "parentId": null,
-            "id": "0010",
-            "title": "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqu",
-            "type": "task",
-            "updatedAt": "2025-03-15T18:48:29.356Z"
-        },
-        "0001": {
-            "locked": false,
-            "completed": true,
-            "cost": 100,
-            "createdAt": "2025-03-15T18:48:29.356Z",
-            "currency": "USD",
-            "data": {
-                "data 1": "task",
-                "data 2": "task"
-            },
-            "description": "# Project Title\n\n## Introduction\n\nThis is a brief introduction to the project.\n\n## Features\n\n1. Feature one\n2. Feature two\n3. Feature three\n\n## Installation\n\nTo install the project, follow these steps:\n\n```bash\ngit clone https://github.com/your-repo/project.git\ncd project\nnpm install\n```\n\n## Usage\n\n- Step one\n- Step two\n- Step three\n",
-            "parentId": null,
-            "id": "0001",
-            "title": "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqu",
-            "type": "task",
-            "updatedAt": "2025-03-15T18:48:29.356Z"
-        },
-        "0002": {
-            "locked": false,
-            "completed": false,
-            "cost": 600,
-            "createdAt": "2025-03-15T18:55:20.368Z",
-            "currency": "USD",
-            "data": {
-                "data 1": "shopping-item",
-                "data 2": "todo"
-            },
-            "description": "# Project Title\n\n## Introduction\n\nThis is a brief introduction to the project.\n\n## Features\n\n1. Feature one\n2. Feature two\n3. Feature three\n\n## Installation\n\nTo install the project, follow these steps:\n\n```bash\ngit clone https://github.com/your-repo/project.git\ncd project\nnpm install\n```\n\n## Usage\n\n- Step one\n- Step two\n- Step three\n",
-            "parentId": null,
-            "id": "0002",
-            "title": "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqu",
-            "type": "shopping-item",
-            "updatedAt": "2025-03-15T18:55:20.368Z"
-        },
-        "0003": {
-            "locked": false,
-            "completed": false,
-            "cost": 200,
-            "createdAt": "2025-03-15T18:54:04.531Z",
-            "currency": "USD",
-            "data": {
-                "data 1": "food",
-                "data 2": "food"
-            },
-            "description": "# Project Title\n\n## Introduction\n\nThis is a brief introduction to the project.\n\n## Features\n\n1. Feature one\n2. Feature two\n3. Feature three\n\n## Installation\n\nTo install the project, follow these steps:\n\n```bash\ngit clone https://github.com/your-repo/project.git\ncd project\nnpm install\n```\n\n## Usage\n\n- Step one\n- Step two\n- Step three\n",
-            "parentId": null,
-            "id": "0003",
-            "title": "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqu",
-            "type": "task",
-            "updatedAt": "2025-03-15T18:54:04.531Z"
-        },
-        "0004": {
-            "locked": false,
-            "completed": true,
-            "cost": 200,
-            "createdAt": "2025-03-15T18:51:18.909Z",
-            "currency": "USD",
-            "data": {
-                "data 1": "task",
-                "data 2": "task"
-            },
-            "description": "# Project Title\n\n## Introduction\n\nThis is a brief introduction to the project.\n\n## Features\n\n1. Feature one\n2. Feature two\n3. Feature three\n\n## Installation\n\nTo install the project, follow these steps:\n\n```bash\ngit clone https://github.com/your-repo/project.git\ncd project\nnpm install\n```\n\n## Usage\n\n- Step one\n- Step two\n- Step three\n",
-            "parentId": null,
-            "id": "0004",
-            "title": "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqu",
-            "type": "food",
-            "updatedAt": "2025-03-15T18:51:18.909Z"
-        },
-        "0005": {
-            "locked": false,
-            "completed": true,
-            "cost": 1000,
-            "createdAt": "2025-03-15T18:55:29.990Z",
-            "currency": "USD",
-            "data": {
-                "data 1": "todo",
-                "data 2": "todo"
-            },
-            "description": "# Project Title\n\n## Introduction\n\nThis is a brief introduction to the project.\n\n## Features\n\n1. Feature one\n2. Feature two\n3. Feature three\n\n## Installation\n\nTo install the project, follow these steps:\n\n```bash\ngit clone https://github.com/your-repo/project.git\ncd project\nnpm install\n```\n\n## Usage\n\n- Step one\n- Step two\n- Step three\n",
-            "parentId": null,
-            "id": "0005",
-            "title": "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqu",
-            "type": "food",
-            "updatedAt": "2025-03-15T18:55:29.990Z"
-        },
-        "0006": {
-            "locked": false,
-            "completed": true,
-            "cost": 100,
-            "createdAt": "2025-03-15T19:37:50.951Z",
-            "currency": "USD",
-            "data": {
-                "data 1": "food",
-                "data 2": "shopping-item"
-            },
-            "description": "# Project Title\n\n## Introduction\n\nThis is a brief introduction to the project.\n\n## Features\n\n1. Feature one\n2. Feature two\n3. Feature three\n\n## Installation\n\nTo install the project, follow these steps:\n\n```bash\ngit clone https://github.com/your-repo/project.git\ncd project\nnpm install\n```\n\n## Usage\n\n- Step one\n- Step two\n- Step three\n",
-            "parentId": null,
-            "id": "0006",
-            "title": "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqu",
-            "type": "food",
-            "updatedAt": "2025-03-15T19:37:50.951Z"
-        }
+  "items": {
+    "0034": {
+      "locked": false,
+      "completed": true,
+      "cost": 1000,
+      "currency": "SEK",
+      "data": {
+        "ball": 500,
+        "rocket": "fly to the sky"
+      },
+      "description": "# Project Title\n\n## Introduction\n\nThis is a brief introduction to the project.\n\n## Features\n\n1. Feature one\n2. Feature two\n3. Feature three\n\n## Installation\n\nTo install the project, follow these steps:\n\n```bash\ngit clone https://github.com/your-repo/project.git\ncd project\nnpm install\n```\n\n## Usage\n\n- Step one\n- Step two\n- Step three\n",
+      "parentId": "0035",
+      "title": "Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title ",
+      "type": "shopping-item",
+      "id": "0034",
+      "createdAt": "2025-03-17T02:32:24.222Z",
+      "updatedAt": "2025-03-17T03:16:25.264Z"
     },
-    "topLevelTodos": [
-        "0015",
-        "0014",
-        "0013",
-        "0012",
-        "0011",
-        "0010",
-        "0009",
-        "0008",
-        "0007",
-        "0006",
-        "0005",
-        "0004",
-        "0003",
-        "0002",
-        "0001"
-    ]
+    "0035": {
+      "locked": false,
+      "completed": false,
+      "cost": 100,
+      "currency": "SEK",
+      "data": {
+        "apple": "50 kCal",
+        "chicken": "Protein 9999"
+      },
+      "description": "# Project Title\n\n## Introduction\n\nThis is a brief introduction to the project.\n\n## Features\n\n1. Feature one\n2. Feature two\n3. Feature three\n\n## Installation\n\nTo install the project, follow these steps:\n\n```bash\ngit clone https://github.com/your-repo/project.git\ncd project\nnpm install\n```\n\n## Usage\n\n- Step one\n- Step two\n- Step three\n",
+      "parentId": null,
+      "title": "Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title ",
+      "type": "food",
+      "id": "0035",
+      "createdAt": "2025-03-17T02:34:55.692Z",
+      "updatedAt": "2025-03-17T03:16:25.264Z",
+      "subtasks": [
+        "0034"
+      ]
+    },
+    "0036": {
+      "locked": false,
+      "completed": false,
+      "cost": 100,
+      "currency": "SEK",
+      "data": {},
+      "description": "# Project Title\n\n## Introduction\n\nThis is a brief introduction to the project.\n\n## Features\n\n1. Feature one\n2. Feature two\n3. Feature three\n\n## Installation\n\nTo install the project, follow these steps:\n\n```bash\ngit clone https://github.com/your-repo/project.git\ncd project\nnpm install\n```\n\n## Usage\n\n- Step one\n- Step two\n- Step three\n",
+      "parentId": null,
+      "title": "Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title ",
+      "type": "task",
+      "id": "0036",
+      "createdAt": "2025-03-17T02:35:32.381Z",
+      "updatedAt": "2025-03-17T02:35:32.381Z"
+    },
+    "0037": {
+      "locked": true,
+      "completed": false,
+      "cost": 100,
+      "currency": "SEK",
+      "data": {},
+      "description": "# Project Title\n\n## Introduction\n\nThis is a brief introduction to the project.\n\n## Features\n\n1. Feature one\n2. Feature two\n3. Feature three\n\n## Installation\n\nTo install the project, follow these steps:\n\n```bash\ngit clone https://github.com/your-repo/project.git\ncd project\nnpm install\n```\n\n## Usage\n\n- Step one\n- Step two\n- Step three\n",
+      "parentId": null,
+      "title": "Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title ",
+      "type": "task",
+      "id": "0037",
+      "createdAt": "2025-03-17T02:35:41.608Z",
+      "updatedAt": "2025-03-17T02:35:41.608Z"
+    },
+    "0038": {
+      "locked": true,
+      "completed": true,
+      "cost": 100,
+      "currency": "SEK",
+      "data": {},
+      "description": "# Project Title\n\n## Introduction\n\nThis is a brief introduction to the project.\n\n## Features\n\n1. Feature one\n2. Feature two\n3. Feature three\n\n## Installation\n\nTo install the project, follow these steps:\n\n```bash\ngit clone https://github.com/your-repo/project.git\ncd project\nnpm install\n```\n\n## Usage\n\n- Step one\n- Step two\n- Step three\n",
+      "parentId": null,
+      "title": "Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title ",
+      "type": "task",
+      "id": "0038",
+      "createdAt": "2025-03-17T02:35:46.113Z",
+      "updatedAt": "2025-03-17T02:35:46.113Z"
+    },
+    "0039": {
+      "locked": false,
+      "completed": true,
+      "cost": 100,
+      "currency": "SEK",
+      "data": {},
+      "description": "# Project Title\n\n## Introduction\n\nThis is a brief introduction to the project.\n\n## Features\n\n1. Feature one\n2. Feature two\n3. Feature three\n\n## Installation\n\nTo install the project, follow these steps:\n\n```bash\ngit clone https://github.com/your-repo/project.git\ncd project\nnpm install\n```\n\n## Usage\n\n- Step one\n- Step two\n- Step three\n",
+      "parentId": null,
+      "title": "Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title ",
+      "type": "task",
+      "id": "0039",
+      "createdAt": "2025-03-17T02:35:50.155Z",
+      "updatedAt": "2025-03-17T02:35:50.155Z"
+    },
+    "0040": {
+      "locked": false,
+      "completed": true,
+      "cost": 0,
+      "currency": "SEK",
+      "data": {},
+      "description": "# Project Title\n\n## Introduction\n\nThis is a brief introduction to the project.\n\n## Features\n\n1. Feature one\n2. Feature two\n3. Feature three\n\n## Installation\n\nTo install the project, follow these steps:\n\n```bash\ngit clone https://github.com/your-repo/project.git\ncd project\nnpm install\n```\n\n## Usage\n\n- Step one\n- Step two\n- Step three\n",
+      "parentId": null,
+      "title": "Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title ",
+      "type": "task",
+      "id": "0040",
+      "createdAt": "2025-03-17T02:35:56.610Z",
+      "updatedAt": "2025-03-17T02:35:56.610Z"
+    },
+    "0041": {
+      "locked": false,
+      "completed": false,
+      "cost": 1000,
+      "currency": "SEK",
+      "data": {
+        "foo": "bar",
+        "baz": ""
+      },
+      "description": "# Project Title\n\n## Introduction\n\nThis is a brief introduction to the project.\n\n## Features\n\n1. Feature one\n2. Feature two\n3. Feature three\n\n## Installation\n\nTo install the project, follow these steps:\n\n```bash\ngit clone https://github.com/your-repo/project.git\ncd project\nnpm install\n```\n\n## Usage\n\n- Step one\n- Step two\n- Step three\n",
+      "parentId": null,
+      "title": "Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title ",
+      "type": "todo",
+      "id": "0041",
+      "createdAt": "2025-03-17T02:38:01.207Z",
+      "updatedAt": "2025-03-17T02:38:44.121Z",
+      "subtasks": [
+        "0044",
+        "0043",
+        "0042"
+      ]
+    },
+    "0042": {
+      "locked": false,
+      "completed": false,
+      "cost": 1000,
+      "currency": "SEK",
+      "data": {
+        "foo": "bar",
+        "baz": ""
+      },
+      "description": "# Project Title\n\n## Introduction\n\nThis is a brief introduction to the project.\n\n## Features\n\n1. Feature one\n2. Feature two\n3. Feature three\n\n## Installation\n\nTo install the project, follow these steps:\n\n```bash\ngit clone https://github.com/your-repo/project.git\ncd project\nnpm install\n```\n\n## Usage\n\n- Step one\n- Step two\n- Step three\n",
+      "parentId": null,
+      "title": "Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title ",
+      "type": "todo",
+      "createdAt": "2025-03-17T02:38:18.021Z",
+      "updatedAt": "2025-03-17T02:38:18.021Z"
+    },
+    "0043": {
+      "locked": false,
+      "completed": true,
+      "cost": 1000,
+      "currency": "SEK",
+      "data": {
+        "foo": "bar",
+        "baz": ""
+      },
+      "description": "# Project Title\n\n## Introduction\n\nThis is a brief introduction to the project.\n\n## Features\n\n1. Feature one\n2. Feature two\n3. Feature three\n\n## Installation\n\nTo install the project, follow these steps:\n\n```bash\ngit clone https://github.com/your-repo/project.git\ncd project\nnpm install\n```\n\n## Usage\n\n- Step one\n- Step two\n- Step three\n",
+      "parentId": null,
+      "title": "Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title ",
+      "type": "todo",
+      "createdAt": "2025-03-17T02:38:28.316Z",
+      "updatedAt": "2025-03-17T02:40:26.190Z",
+      "subtasks": [
+        "0046",
+        "0045"
+      ]
+    },
+    "0044": {
+      "locked": true,
+      "completed": true,
+      "cost": 1000,
+      "currency": "SEK",
+      "data": {
+        "foo": "bar",
+        "baz": ""
+      },
+      "description": "# Project Title\n\n## Introduction\n\nThis is a brief introduction to the project.\n\n## Features\n\n1. Feature one\n2. Feature two\n3. Feature three\n\n## Installation\n\nTo install the project, follow these steps:\n\n```bash\ngit clone https://github.com/your-repo/project.git\ncd project\nnpm install\n```\n\n## Usage\n\n- Step one\n- Step two\n- Step three\n",
+      "parentId": null,
+      "title": "Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title ",
+      "type": "todo",
+      "createdAt": "2025-03-17T02:38:44.122Z",
+      "updatedAt": "2025-03-17T02:38:44.122Z"
+    },
+    "0045": {
+      "locked": false,
+      "completed": false,
+      "cost": 1000,
+      "currency": "SEK",
+      "data": {
+        "foo": "bar",
+        "baz": ""
+      },
+      "description": "# Project Title\n\n## Introduction\n\nThis is a brief introduction to the project.\n\n## Features\n\n1. Feature one\n2. Feature two\n3. Feature three\n\n## Installation\n\nTo install the project, follow these steps:\n\n```bash\ngit clone https://github.com/your-repo/project.git\ncd project\nnpm install\n```\n\n## Usage\n\n- Step one\n- Step two\n- Step three\n",
+      "parentId": null,
+      "title": "Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title ",
+      "type": "todo",
+      "createdAt": "2025-03-17T02:40:20.661Z",
+      "updatedAt": "2025-03-17T02:40:20.661Z"
+    },
+    "0046": {
+      "locked": false,
+      "completed": false,
+      "cost": 1000,
+      "currency": "SEK",
+      "data": {
+        "foo": "bar",
+        "baz": ""
+      },
+      "description": "# Project Title\n\n## Introduction\n\nThis is a brief introduction to the project.\n\n## Features\n\n1. Feature one\n2. Feature two\n3. Feature three\n\n## Installation\n\nTo install the project, follow these steps:\n\n```bash\ngit clone https://github.com/your-repo/project.git\ncd project\nnpm install\n```\n\n## Usage\n\n- Step one\n- Step two\n- Step three\n",
+      "parentId": null,
+      "title": "Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title Long title ",
+      "type": "todo",
+      "createdAt": "2025-03-17T02:40:26.190Z",
+      "updatedAt": "2025-03-17T02:40:26.190Z"
+    }
+  },
+  "topLevelTodos": [
+    "0041",
+    "0040",
+    "0039",
+    "0038",
+    "0037",
+    "0036",
+    "0035"
+  ],
+  "timeStamp": "2025-03-17T03:16:25.264Z",
+  "length": 13
 }
