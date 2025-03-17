@@ -145,6 +145,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
                 [id]: {
                     ...payload,
                     id,
+                    parentId,
                     createdAt: new Date().toISOString(),
                     updatedAt: new Date().toISOString(),
                 },
