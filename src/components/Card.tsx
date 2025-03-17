@@ -2,9 +2,12 @@
 
 import type { TaskType, Task } from '@/types/Task';
 import Label from '@/components/Label';
+import Checkbox from '@/components/Checkbox';
+import Button from '@/components/Button';
 import SubtaskTree from '@/components/SubtaskTree';
 import { getMinutesAgo } from '@/lib/utils/time';
 import Link from 'next/link';
+import { useRootStore } from '@/providers/RootStoreProvider';
 // import Markdown from 'react-markdown';
 // import remarkGfm from 'remark-gfm';
 // import rehypeRaw from 'rehype-raw';
@@ -29,6 +32,7 @@ export const getLockedClass = (locked: boolean) => {
 };
 
 const Card = (props: Task) => {
+    const { setCompleteTask } = useRootStore((state) => state);
     const { createdAt, data, title, locked, completed, type, id, totalCost, currency, updatedAt, cost } = props;
     const emoji = typesConfig[type].emoji;
     const taskLabel = typesConfig[type].label;
@@ -44,7 +48,7 @@ const Card = (props: Task) => {
     return (
         <div className={`flex flex-col w-full ${getLockedClass(locked)}`}>
             <Link
-                className={`flex justify-between items-center gap-4 border-b-4 text-neutral-900 dark:text-neutral-100  border-neutral-400 dark:border-neutral-500 outline-none ${hoverClass}`}
+                className={`flex justify-between items-center gap-4 border-b-4 text-neutral-900 dark:text-neutral-100 border-neutral-400 dark:border-neutral-500 outline-none ${hoverClass}`}
                 href={`/todos/${id}`}
                 tabIndex={locked ? -1 : 0}
             >
@@ -62,16 +66,22 @@ const Card = (props: Task) => {
                 )}
             </Link>
 
-            <button
-                className="flex flex-col items-start gap-4 max-w-4xl p-4 bg-neutral-200 dark:bg-neutral-700 hover:bg-neutral-300 dark:hover:bg-neutral-800 focus:bg-neutral-300 dark:focus:bg-neutral-800 rounded-bl-lg rounded-br-lg outline-none transition duration-300"
-                onClick={editTodo}
-                onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                        editTodo();
-                    }
-                }}
-            >
-                <div className="flex flex-wrap gap-2">
+            <div className="flex flex-col items-start gap-4 max-w-4xl p-4 bg-neutral-200 dark:bg-neutral-700 rounded-bl-lg rounded-br-lg">
+                <div className="flex justify-between items-start gap-2 w-full">
+                    <Checkbox
+                        checked={completed}
+                        label="Completed"
+                        id={id}
+                        onChange={(value) => {
+                            setCompleteTask(id, value);
+                        }}
+                    />
+                    <div className="flex flex-wrap gap-2">
+                        <Button type="button" onClick={editTodo} title="Edit" />
+                    </div>
+                </div>
+
+                <div className="flex items-start gap-2 flex-wrap w-full">
                     <Label value={taskLabel} type="info">
                         type: {taskLabel}
                     </Label>
@@ -81,12 +91,10 @@ const Card = (props: Task) => {
                             {key.toLocaleLowerCase()}: {value}
                         </Label>
                     ))}
-
-                    {completed && <Label value="Completed" type="success" />}
                 </div>
 
                 <SubtaskTree subtasks={props.subtasks || []} className="w-full" />
-            </button>
+            </div>
 
             <div className={`flex justify-between items-center gap-4`}>
                 <div className="flex gap-2">

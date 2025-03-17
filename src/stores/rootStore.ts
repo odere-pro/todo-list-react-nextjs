@@ -16,9 +16,10 @@ export type RootActions = {
     updateAllTasks: (data: Todos) => void;
     deleteTask: (id: TaskId) => void;
     deleteAllTask: () => void;
-    setCompleteTasks: (value: boolean) => void;
+    hideCompletedTasks: (value: boolean) => void;
     moveTask: (id: TaskId, position: number) => void;
     setSearchStr: (value?: string) => void;
+    setCompleteTask: (id: TaskId, value: boolean) => void;
 };
 
 export type RootStore = RootState & RootActions;
@@ -144,7 +145,7 @@ export const createRootStore = (initState: RootState = defaultInitState) => {
                 };
             }),
 
-        setCompleteTasks: (hideComplete: boolean) =>
+        hideCompletedTasks: (hideComplete: boolean) =>
             set((state) => {
                 return {
                     ...state,
@@ -169,12 +170,38 @@ export const createRootStore = (initState: RootState = defaultInitState) => {
                     };
                 });
 
-                console.log(items)
-
                 return {
                     ...state,
                     items,
                     searchStr,
+                };
+            }),
+
+        setCompleteTask: (id: TaskId, value: boolean) =>
+            set((state) => {
+                const completeSubtasks = (taskId: TaskId, items: Record<TaskId, Task & { hidden?: boolean }>) => {
+                    const task = items[taskId];
+                    if (task.subtasks) {
+                        task.subtasks.forEach((subtaskId) => {
+                            items[subtaskId].completed = value;
+                            completeSubtasks(subtaskId, items);
+                        });
+                    }
+                };
+
+                const items = {
+                    ...state.items,
+                    [id]: {
+                        ...state.items[id],
+                        completed: value,
+                    },
+                };
+
+                completeSubtasks(id, items);
+
+                return {
+                    ...state,
+                    items,
                 };
             }),
     }));

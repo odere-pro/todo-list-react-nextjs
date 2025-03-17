@@ -17,7 +17,7 @@ interface NavigationBarProps {
 }
 
 function NavigationBar(props: NavigationBarProps) {
-    const { setSearchStr, items, setCompleteTasks } = useRootStore((state) => state);
+    const { setSearchStr, items, hideCompletedTasks } = useRootStore((state) => state);
     const { element = 'nav', className } = props;
     const pathname = usePathname();
     const [isNotFound, setIsNotFound] = useState(false);
@@ -42,11 +42,11 @@ function NavigationBar(props: NavigationBarProps) {
     };
 
     const filterCompleteTasks = (value: boolean) => {
-        setCompleteTasks(value);
+        hideCompletedTasks(value);
     };
 
     const onSearch = (value: string) => {
-        console.log({ value });
+        console.log({ value })
         setSearchStr(value);
     };
 

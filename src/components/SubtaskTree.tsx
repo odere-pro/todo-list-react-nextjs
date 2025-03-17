@@ -16,7 +16,7 @@ const SubtaskTree = ({ subtasks, className }: SubtaskTreeProps) => {
     if (!subtasks || subtasks.length === 0) return null;
 
     return (
-        <ul className={`flex flex-col text-xs gap-1 items-start ${className}`}>
+        <ul className={`flex flex-col text-sm gap-2 items-start ${className}`}>
             {subtasks.map((id) => {
                 const todo = items[id];
 
@@ -34,19 +34,20 @@ const SubtaskTree = ({ subtasks, className }: SubtaskTreeProps) => {
                 const count = getSubtasksCount(id);
 
                 return (
-                    <li key={id} className="w-full">
+                    <li key={id} className="w-full flex flex-col gap-1">
                         <Link
                             href={`/todos/${id}`}
-                            className="grid grid-cols-[1fr_auto] gap-2 w-full select-none outline-none text-neutral-900 dark:text-neutral-100 dark:border-neutral-500 hover:text-indigo-600 dark:hover:text-indigo-600 focus:text-indigo-600 dark:focus:text-indigo-600"
+                            className="block gap-2 w-full select-none outline-none text-neutral-900 dark:text-neutral-100 dark:border-neutral-500 hover:text-indigo-600 dark:hover:text-indigo-600 focus:text-indigo-600 dark:focus:text-indigo-600"
                             tabIndex={todo.locked ? -1 : 0}
+                            onClick={(e) => e.stopPropagation()}
                         >
-                            <div className="truncate">
+                            <div className={`truncate ${todo.completed ? "line-through" : ""}`}>
                                 #{id}: {todo.title}{' '}
                             </div>
-                            <div className="flex justify-start whitespace-nowrap min-w-14">
-                                {count > 0 ? `${count} todos` : ''}
-                            </div>
                         </Link>
+                        <div className="text-xs text-neutral-900/50 dark:text-neutral-100/50">
+                            {count > 0 ? `${count} todos` : ''}
+                        </div>
                     </li>
                 );
             })}

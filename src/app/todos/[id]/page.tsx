@@ -3,8 +3,8 @@ import { Suspense } from 'react';
 
 const TodoPage = async (props: { params: { id: string }; searchParams: { edit: string } }) => {
     const { id } = await props.params;
-    const searchQuery = await props.searchParams;
-    const isEditMode = Object.keys(searchQuery).includes('edit');
+    // const searchQuery = await props.searchParams;
+    // const isEditMode = Object.keys(searchQuery).includes('edit');
 
     return (
         <Suspense
@@ -14,7 +14,8 @@ const TodoPage = async (props: { params: { id: string }; searchParams: { edit: s
                 </div>
             }
         >
-            {isEditMode ? <p>Edit</p> : <TodosList id={id} />}
+            {/* {isEditMode ? <p>Edit</p> : <TodosList id={id} />} */}
+            <TodosList id={id} />
         </Suspense>
     );
 };

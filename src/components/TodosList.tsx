@@ -43,7 +43,8 @@ const TodosList = ({ id }: TodoListProps) => {
             {todosIds.map((id) => {
                 if (hideComplete) {
                     return (
-                        (!items[id].completed && !items[id].hidden) && (
+                        !items[id].completed &&
+                        !items[id].hidden && (
                             <li key={id}>
                                 <Card {...items[id]} />
                             </li>

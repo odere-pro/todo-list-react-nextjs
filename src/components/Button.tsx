@@ -25,6 +25,11 @@ const Button = ({ type = 'button', onClick, variant = 'default', title = 'OK' }:
         <button
             className={`relative inline-flex items-center rounded-md px-3 py-1 text-sm shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 transition duration-300 select-none cursor-pointer ${getVariantClass(variant)}`}
             onClick={onClick}
+            onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                    onClick();
+                }
+            }}
             type={type}
         >
             {title}
