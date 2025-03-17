@@ -41,7 +41,7 @@ const SubtaskTree = ({ subtasks, className }: SubtaskTreeProps) => {
                             tabIndex={todo.locked ? -1 : 0}
                             onClick={(e) => e.stopPropagation()}
                         >
-                            <div className={`truncate ${todo.completed ? "line-through" : ""}`}>
+                            <div className={`truncate ${todo.completed ? 'line-through' : ''}`}>
                                 #{id}: {todo.title}{' '}
                             </div>
                         </Link>

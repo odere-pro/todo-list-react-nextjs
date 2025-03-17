@@ -1,15 +1,15 @@
 'use client';
 
+import Breadcrumbs from '@/components/Breadcrumbs';
 import Button from '@/components/Button';
 import Link from 'next/link';
 import SearchInput from '@/components/SearchInput';
-import Toolbar from '@/components/Toolbar';
 import Toggle from '@/components/Toggle';
+import useTaskId from '@/hooks/useTaskId';
 import { Disclosure } from '@headlessui/react';
 import { ElementType } from 'react';
-import { usePathname } from 'next/navigation';
-import { useRootStore } from '@/providers/RootStoreProvider';
 import { useEffect, useState } from 'react';
+import { useRootStore } from '@/providers/RootStoreProvider';
 
 interface NavigationBarProps {
     className?: string;
@@ -19,23 +19,14 @@ interface NavigationBarProps {
 function NavigationBar(props: NavigationBarProps) {
     const { setSearchStr, items, hideCompletedTasks } = useRootStore((state) => state);
     const { element = 'nav', className } = props;
-    const pathname = usePathname();
+    const { id } = useTaskId();
     const [isNotFound, setIsNotFound] = useState(false);
 
     useEffect(() => {
-        const match = pathname.match(/\/todos\/(\d+)/);
-        if (match) {
-            setIsNotFound(Boolean(match[1] && !items[match[1]]));
+        if (id) {
+            setIsNotFound(Boolean(!items[id]));
         }
-    }, [items, pathname]);
-
-    const getActiveLinkClass = (href: string) => {
-        const config: Record<string, string> = {
-            active: 'border-b-2 border-indigo-500',
-        };
-
-        return pathname === href ? config.active : undefined;
-    };
+    }, [id, items]);
 
     const handleAddTask = () => {
         // FIXME: remove after testing
@@ -46,7 +37,6 @@ function NavigationBar(props: NavigationBarProps) {
     };
 
     const onSearch = (value: string) => {
-        console.log({ value })
         setSearchStr(value);
     };
 
@@ -61,9 +51,9 @@ function NavigationBar(props: NavigationBarProps) {
                         <div className="flex h-full">
                             <Link
                                 href="/todos"
-                                className={`inline-flex items-center px-2 text-md font-medium text-neutral-900 dark:text-neutral-100 hover:bg-neutral-300 dark:hover:bg-neutral-800 transition duration-300 ${getActiveLinkClass('/todos')}`}
+                                className="inline-flex items-center px-2 text-md font-medium text-neutral-900 dark:text-neutral-100 hover:bg-neutral-300 dark:hover:bg-neutral-800 transition duration-300"
                             >
-                                <strong>Home</strong>
+                                <strong>Todo app</strong>
                             </Link>
                         </div>
 
@@ -72,11 +62,15 @@ function NavigationBar(props: NavigationBarProps) {
                 </div>
             </div>
 
+            <Breadcrumbs className="mx-auto max-w-4xl px-[20px] lg:px-4 w-full" />
+
             {!isNotFound && (
-                <Toolbar className="mx-auto max-w-3xl px-[20px] lg:px-4">
-                    <Toggle onChange={filterCompleteTasks} />
-                    <Button title="Add task" variant="primary" onClick={handleAddTask} />
-                </Toolbar>
+                <div className={`flex justify-between items-center w-full gap-4 ${className}`}>
+                    <div className="flex justify-end flex-1 gap-4 mx-auto max-w-3xl px-[20px] lg:px-4">
+                        <Toggle onChange={filterCompleteTasks} />
+                        <Button title="Add task" variant="primary" onClick={handleAddTask} />
+                    </div>
+                </div>
             )}
         </Disclosure>
     );
