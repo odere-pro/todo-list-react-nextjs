@@ -28,10 +28,17 @@ export async function DELETE() {
     try {
         const dataPath = path.join(__dirname, 'data.json');
 
-        await fs.writeFile(dataPath, JSON.stringify({
-            items: {},
-            topLevelTodos: [],
-        }, null, 2));
+        await fs.writeFile(
+            dataPath,
+            JSON.stringify(
+                {
+                    items: {},
+                    topLevelTodos: [],
+                },
+                null,
+                2
+            )
+        );
 
         return new Response(JSON.stringify({ message: 'Deleted successfully' }), {
             status: 200,
@@ -92,7 +99,6 @@ export async function POST(request: Request) {
             items: {
                 ...todos.items,
                 [id]: {
-                    ...todos.items[id],
                     ...payload,
                     id,
                     createdAt: new Date().toISOString(),
@@ -102,11 +108,18 @@ export async function POST(request: Request) {
             topLevelTodos: [id, ...topLevelTodos],
         };
 
-        await fs.writeFile(dataPath, JSON.stringify({
-            ...newTodos,
-            timeStamp: new Date().toISOString(),
-            length: (todos?.length || 0) + 1,
-        }, null, 2));
+        await fs.writeFile(
+            dataPath,
+            JSON.stringify(
+                {
+                    ...newTodos,
+                    timeStamp: new Date().toISOString(),
+                    length: (todos?.length || 0) + 1,
+                },
+                null,
+                2
+            )
+        );
 
         return new Response(JSON.stringify(newTodos.items[id]), {
             status: 201,
@@ -124,7 +137,7 @@ export function OPTIONS() {
     return new Response(null, {
         status: 204,
         headers: {
-            'Allow': 'GET, POST, DELETE, OPTIONS',
+            Allow: 'GET, POST, DELETE, OPTIONS',
             'Content-Type': 'application/json',
         },
     });

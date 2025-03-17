@@ -2,6 +2,7 @@ import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 
 interface SearchInputProps {
     className?: string;
+    onSearch?(value: string): void;
 }
 
 function SearchInput(props: SearchInputProps) {
@@ -13,6 +14,11 @@ function SearchInput(props: SearchInputProps) {
                 name="search"
                 type="search"
                 placeholder="Search"
+                onChange={(e) => {
+                    if (props.onSearch) {
+                        props.onSearch((e.target as HTMLInputElement).value);
+                    }
+                }}
                 className="block flex-1 py-2 pr-9 pl-4 text-base text-neutral-900 dark:text-neutral-100 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
             />
             <MagnifyingGlassIcon

@@ -17,7 +17,7 @@ interface NavigationBarProps {
 }
 
 function NavigationBar(props: NavigationBarProps) {
-    const { createTask, items, setCompleteTasks } = useRootStore((state) => state);
+    const { setSearchStr, items, setCompleteTasks } = useRootStore((state) => state);
     const { element = 'nav', className } = props;
     const pathname = usePathname();
     const [isNotFound, setIsNotFound] = useState(false);
@@ -45,6 +45,11 @@ function NavigationBar(props: NavigationBarProps) {
         setCompleteTasks(value);
     };
 
+    const onSearch = (value: string) => {
+        console.log({ value });
+        setSearchStr(value);
+    };
+
     return (
         <Disclosure
             as={element}
@@ -62,7 +67,7 @@ function NavigationBar(props: NavigationBarProps) {
                             </Link>
                         </div>
 
-                        {!isNotFound && <SearchInput className="" />}
+                        {!isNotFound && <SearchInput onSearch={onSearch} />}
                     </nav>
                 </div>
             </div>

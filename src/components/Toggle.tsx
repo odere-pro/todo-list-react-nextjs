@@ -15,7 +15,7 @@ function Toggle(props: ToggleProps) {
         if (props.onChange) {
             props.onChange(value);
         }
-    }
+    };
 
     return (
         <Field className="flex items-center gap-2">

@@ -1,27 +1,10 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import type { Todos } from '@/types/Todos';
 
 const useTodosApi = () => {
-    const getFromLocalStorage = () => {
-        if (typeof window !== 'undefined') {
-            const savedTodos = localStorage.getItem('todos');
-            return savedTodos ? JSON.parse(savedTodos) : undefined;
-        }
-    };
-
-    const setToLocalStorage = (todos: Todos) => {
-        if (typeof window !== 'undefined' && todos) {
-            localStorage.setItem('todos', JSON.stringify(todos));
-        }
-    };
-
-    const [todos, setTodos] = useState<Todos>(getFromLocalStorage);
+    const [todos, setTodos] = useState<Todos>();
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-
-    useEffect(() => {
-        setToLocalStorage(todos);
-    }, [todos]);
 
     const fetchTodos = useCallback(
         async ({ silent = false, force = false } = {}) => {

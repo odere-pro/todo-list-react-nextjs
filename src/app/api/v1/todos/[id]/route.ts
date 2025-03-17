@@ -143,8 +143,8 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
                     updatedAt: new Date().toISOString(),
                 },
                 [id]: {
-                    ...todos.items[id],
                     ...payload,
+                    id,
                     createdAt: new Date().toISOString(),
                     updatedAt: new Date().toISOString(),
                 },
@@ -152,11 +152,18 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
             topLevelTodos,
         };
 
-        await fs.writeFile(dataPath, JSON.stringify({
-            ...newTodos,
-            timeStamp: new Date().toISOString(),
-            length: (todos?.length || 0) + 1,
-        }, null, 2));
+        await fs.writeFile(
+            dataPath,
+            JSON.stringify(
+                {
+                    ...newTodos,
+                    timeStamp: new Date().toISOString(),
+                    length: (todos?.length || 0) + 1,
+                },
+                null,
+                2
+            )
+        );
 
         return new Response(JSON.stringify(newTodos.items[id]), {
             status: 201,
@@ -169,7 +176,6 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
         });
     }
 }
-
 
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
@@ -211,11 +217,11 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
                     ...newTodos.items,
                     [parentId]: {
                         ...parentTodo,
-                        subtasks: [id, ...parentTodo.subtasks || []],
+                        subtasks: [id, ...(parentTodo.subtasks || [])],
                         updatedAt: new Date().toISOString(),
                     },
                 },
-            }
+            };
         }
 
         if (todo.parentId) {
@@ -230,12 +236,12 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
                         updatedAt: new Date().toISOString(),
                     },
                 },
-            }
+            };
         } else {
             newTodos = {
                 ...newTodos,
                 topLevelTodos: newTodos.topLevelTodos.filter((item) => item !== id),
-            }
+            };
         }
 
         await fs.writeFile(dataPath, JSON.stringify(newTodos, null, 2));
@@ -256,7 +262,7 @@ export function OPTIONS() {
     return new Response(null, {
         status: 204,
         headers: {
-            'Allow': 'GET, POST, DELETE, OPTIONS, PATCH',
+            Allow: 'GET, POST, DELETE, OPTIONS, PATCH',
             'Content-Type': 'application/json',
         },
     });

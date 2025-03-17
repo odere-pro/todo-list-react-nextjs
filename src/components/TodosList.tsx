@@ -42,18 +42,22 @@ const TodosList = ({ id }: TodoListProps) => {
         <ul role="list" className="w-full flex flex-col gap-4">
             {todosIds.map((id) => {
                 if (hideComplete) {
-                    return !items[id].completed && (
+                    return (
+                        (!items[id].completed && !items[id].hidden) && (
+                            <li key={id}>
+                                <Card {...items[id]} />
+                            </li>
+                        )
+                    );
+                }
+
+                return (
+                    !items[id].hidden && (
                         <li key={id}>
                             <Card {...items[id]} />
                         </li>
                     )
-                }
-
-                return (
-                    <li key={id}>
-                        <Card {...items[id]} />
-                    </li>
-                )
+                );
             })}
         </ul>
     );

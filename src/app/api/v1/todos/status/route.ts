@@ -12,13 +12,16 @@ export async function GET() {
         const data = await fs.readFile(dataPath, 'utf-8');
         const todos: Todos = JSON.parse(data);
 
-        return new Response(JSON.stringify({
-            length: todos.length,
-            timeStamp: todos.timeStamp,
-        }), {
-            status: 200,
-            headers: { 'Content-Type': 'application/json' },
-        });
+        return new Response(
+            JSON.stringify({
+                length: todos.length,
+                timeStamp: todos.timeStamp,
+            }),
+            {
+                status: 200,
+                headers: { 'Content-Type': 'application/json' },
+            }
+        );
     } catch (error) {
         return new Response(JSON.stringify({ error }), {
             status: 500,
@@ -31,7 +34,7 @@ export function OPTIONS() {
     return new Response(null, {
         status: 204,
         headers: {
-            'Allow': 'GET, OPTIONS',
+            Allow: 'GET, OPTIONS',
             'Content-Type': 'application/json',
         },
     });

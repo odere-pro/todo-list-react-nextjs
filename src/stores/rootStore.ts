@@ -4,8 +4,10 @@ import { moveTask } from '@/lib/utils/task';
 import { createStore } from 'zustand/vanilla';
 
 interface RootState extends Todos {
+    items: Record<TaskId, Task & { hidden?: boolean }>;
     loading: boolean;
     hideComplete: boolean;
+    searchStr?: string;
 }
 
 export type RootActions = {
@@ -16,6 +18,7 @@ export type RootActions = {
     deleteAllTask: () => void;
     setCompleteTasks: (value: boolean) => void;
     moveTask: (id: TaskId, position: number) => void;
+    setSearchStr: (value?: string) => void;
 };
 
 export type RootStore = RootState & RootActions;
@@ -142,12 +145,37 @@ export const createRootStore = (initState: RootState = defaultInitState) => {
             }),
 
         setCompleteTasks: (hideComplete: boolean) =>
-            set((state) => { 
+            set((state) => {
                 return {
                     ...state,
                     hideComplete,
                 };
-            }
-        ),
+            }),
+
+        setSearchStr: (searchStr?: string) =>
+            set((state) => {
+                const items = { ...state.items };
+
+                Object.values(state.items).forEach((item: Task) => {
+                    const searchStrLower = searchStr?.toLowerCase() || '';
+                    const matchesSearch =
+                        item.id.toLowerCase().includes(searchStrLower) ||
+                        item.title.toLowerCase().includes(searchStrLower) ||
+                        item.description.toLowerCase().includes(searchStrLower);
+
+                    items[item.id] = {
+                        ...item,
+                        hidden: !matchesSearch,
+                    };
+                });
+
+                console.log(items)
+
+                return {
+                    ...state,
+                    items,
+                    searchStr,
+                };
+            }),
     }));
 };

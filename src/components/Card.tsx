@@ -5,6 +5,12 @@ import Label from '@/components/Label';
 import SubtaskTree from '@/components/SubtaskTree';
 import { getMinutesAgo } from '@/lib/utils/time';
 import Link from 'next/link';
+// import Markdown from 'react-markdown';
+// import remarkGfm from 'remark-gfm';
+// import rehypeRaw from 'rehype-raw';
+// import rehypeSanitize from 'rehype-sanitize';
+// import remarkParse from 'remark-parse';
+// import remarkRehype from 'remark-rehype';
 
 interface TodoUIConfig {
     label: string;
@@ -78,7 +84,8 @@ const Card = (props: Task) => {
 
                     {completed && <Label value="Completed" type="success" />}
                 </div>
-                <SubtaskTree {...props} />
+
+                <SubtaskTree subtasks={props.subtasks || []} className="w-full" />
             </button>
 
             <div className={`flex justify-between items-center gap-4`}>

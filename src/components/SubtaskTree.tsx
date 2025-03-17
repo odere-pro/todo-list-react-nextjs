@@ -1,64 +1,56 @@
 'use client';
 
-import type { Task, TaskId } from '@/types/Task';
+import type { TaskId } from '@/types/Task';
 import React from 'react';
 import { useRootStore } from '@/providers/RootStoreProvider';
 import Link from 'next/link';
 
-type TaskList = {
-    id: TaskId;
-    subtasks: (TaskList | null)[];
-};
+export interface SubtaskTreeProps {
+    subtasks: TaskId[];
+    className?: string;
+}
 
-export const getTaskMultiLevelList = (id: TaskId, items: Record<string, Task>): TaskList | null => {
-    const buildList = (taskId: TaskId): TaskList | null => {
-        const task = items[taskId];
-        if (!task) return null;
-
-        return {
-            id: task.id,
-            subtasks: task.subtasks ? task.subtasks.map(buildList) : [],
-        };
-    };
-
-    return buildList(id);
-};
-
-const SubtaskTree = ({ subtasks }: Task) => {
+const SubtaskTree = ({ subtasks, className }: SubtaskTreeProps) => {
     const { items } = useRootStore((state) => state);
 
     if (!subtasks || subtasks.length === 0) return null;
 
-    const renderSubtasks = (subtasks?: TaskId[]) => {
-        if (!subtasks) return null;
-
-        return (
-            <ul className="ml-4 mt-2 flex flex-col gap-2">
-                {subtasks.map((id) => {
-                    const subtask = items[id];
-                    if (!subtask) return null;
-                    return (
-                        <li key={id}>
-                            <Link
-                                href={`/todos/${id}`}
-                                className="select-none outline-none text-neutral-900 dark:text-neutral-100 dark:border-neutral-500 hover:text-indigo-600 dark:hover:text-indigo-600 focus:text-indigo-600 dark:focus:text-indigo-600"
-                                tabIndex={subtask.locked ? -1 : 0}
-                            >
-                                #{id}: {subtask.title}
-                            </Link>
-                            {subtask.subtasks && subtask.subtasks.length > 0 && renderSubtasks(subtask.subtasks)}
-                        </li>
-                    );
-                })}
-            </ul>
-        );
-    };
-
     return (
-        <div className="flex flex-col">
-            <h3 className="text-sm text-left">Subtasks</h3>
-            <div className="-ml-4 text-xs">{renderSubtasks(subtasks)}</div>
-        </div>
+        <ul className={`flex flex-col text-xs gap-1 items-start ${className}`}>
+            {subtasks.map((id) => {
+                const todo = items[id];
+
+                if (!todo) return null;
+
+                const getSubtasksCount = (taskId: TaskId): number => {
+                    const task = items[taskId];
+                    if (!task || !task.subtasks) return 0;
+                    return (
+                        task.subtasks.length +
+                        task.subtasks.reduce((sum, subtaskId) => sum + getSubtasksCount(subtaskId), 0)
+                    );
+                };
+
+                const count = getSubtasksCount(id);
+
+                return (
+                    <li key={id} className="w-full">
+                        <Link
+                            href={`/todos/${id}`}
+                            className="grid grid-cols-[1fr_auto] gap-2 w-full select-none outline-none text-neutral-900 dark:text-neutral-100 dark:border-neutral-500 hover:text-indigo-600 dark:hover:text-indigo-600 focus:text-indigo-600 dark:focus:text-indigo-600"
+                            tabIndex={todo.locked ? -1 : 0}
+                        >
+                            <div className="truncate">
+                                #{id}: {todo.title}{' '}
+                            </div>
+                            <div className="flex justify-start whitespace-nowrap min-w-14">
+                                {count > 0 ? `${count} todos` : ''}
+                            </div>
+                        </Link>
+                    </li>
+                );
+            })}
+        </ul>
     );
 };
 
