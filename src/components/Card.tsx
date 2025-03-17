@@ -2,6 +2,7 @@
 
 import type { TaskType, Task } from '@/types/Task';
 import Label from '@/components/Label';
+import SubtaskTree from '@/components/SubtaskTree';
 import { getMinutesAgo } from '@/lib/utils/time';
 import Link from 'next/link';
 
@@ -21,26 +22,27 @@ export const getLockedClass = (locked: boolean) => {
     return locked && 'pointer-events-none opacity-50';
 };
 
-interface CardProps extends Task {
-    children?: React.ReactNode;
-}
-
-const Card = ({ createdAt, data, title, locked, completed, type, id, totalCost, currency, updatedAt }: CardProps) => {
+const Card = (props: Task) => {
+    const { createdAt, data, title, locked, completed, type, id, totalCost, currency, updatedAt, cost } = props;
     const emoji = typesConfig[type].emoji;
     const taskLabel = typesConfig[type].label;
     const time = updatedAt || createdAt;
     const minutesAgo = time && getMinutesAgo(time);
-    const headerBorderClass =
-        'border-b-4 border-neutral-400 dark:border-neutral-500 hover:border-indigo-600 dark:hover:border-indigo-600 focus:border-indigo-600 dark:focus:border-indigo-600';
+    const hoverClass =
+        'hover:text-indigo-600 dark:hover:text-indigo-600 focus:text-indigo-600 dark:focus:text-indigo-600 transition duration-300';
+
+    const editTodo = () => {
+        window.location.href = `/todos/${id}?edit=true`;
+    };
 
     return (
         <div className={`flex flex-col w-full ${getLockedClass(locked)}`}>
             <Link
-                className={`flex justify-between items-center gap-4 ${headerBorderClass} outline-none`}
+                className={`flex justify-between items-center gap-4 border-b-4 text-neutral-900 dark:text-neutral-100  border-neutral-400 dark:border-neutral-500 outline-none ${hoverClass}`}
                 href={`/todos/${id}`}
                 tabIndex={locked ? -1 : 0}
             >
-                <h2 className="text-md truncate text-neutral-900 dark:text-neutral-100 flex-1 border-cyan-500">
+                <h2 className="text-md truncate flex-1">
                     <span className="mr-2">
                         {emoji} <strong>#{id}</strong>
                     </span>
@@ -54,7 +56,15 @@ const Card = ({ createdAt, data, title, locked, completed, type, id, totalCost, 
                 )}
             </Link>
 
-            <div className="gap-4 max-w-4xl p-4 bg-neutral-200 dark:bg-neutral-700 rounded-bl-lg rounded-br-lg">
+            <button
+                className="flex flex-col items-start gap-4 max-w-4xl p-4 bg-neutral-200 dark:bg-neutral-700 hover:bg-neutral-300 dark:hover:bg-neutral-800 focus:bg-neutral-300 dark:focus:bg-neutral-800 rounded-bl-lg rounded-br-lg outline-none transition duration-300"
+                onClick={editTodo}
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                        editTodo();
+                    }
+                }}
+            >
                 <div className="flex flex-wrap gap-2">
                     <Label value={taskLabel} type="info">
                         type: {taskLabel}
@@ -68,17 +78,26 @@ const Card = ({ createdAt, data, title, locked, completed, type, id, totalCost, 
 
                     {completed && <Label value="Completed" type="success" />}
                 </div>
-                <div></div>
-            </div>
+                <SubtaskTree {...props} />
+            </button>
 
             <div className={`flex justify-between items-center gap-4`}>
-                <div>
-                    {totalCost && (
-                        <Label value={taskLabel} type="empty">
-                            <span className="text-xs/5 text-gray-500 dark:text-neutral-400">
-                                Total cost: {totalCost} {currency}
-                            </span>
-                        </Label>
+                <div className="flex gap-2">
+                    <Label value={taskLabel} type="empty">
+                        <span className="text-xs/5 text-gray-500 dark:text-neutral-400">
+                            Cost: {cost} {currency}
+                        </span>
+                    </Label>
+
+                    {totalCost !== cost && (
+                        <>
+                            <span className="text-xs/5 text-gray-500 dark:text-neutral-400">|</span>
+                            <Label value={taskLabel} type="empty">
+                                <span className="text-xs/5 text-gray-500 dark:text-neutral-400">
+                                    Total cost: {totalCost} {currency}
+                                </span>
+                            </Label>
+                        </>
                     )}
                 </div>
                 {minutesAgo && (

@@ -4,10 +4,12 @@ import Button from '@/components/Button';
 import Link from 'next/link';
 import SearchInput from '@/components/SearchInput';
 import Toolbar from '@/components/Toolbar';
+import Toggle from '@/components/Toggle';
 import { Disclosure } from '@headlessui/react';
 import { ElementType } from 'react';
 import { usePathname } from 'next/navigation';
 import { useRootStore } from '@/providers/RootStoreProvider';
+import { useEffect, useState } from 'react';
 
 interface NavigationBarProps {
     className?: string;
@@ -15,9 +17,17 @@ interface NavigationBarProps {
 }
 
 function NavigationBar(props: NavigationBarProps) {
-    const { createTask } = useRootStore((state) => state);
+    const { createTask, items, setCompleteTasks } = useRootStore((state) => state);
     const { element = 'nav', className } = props;
     const pathname = usePathname();
+    const [isNotFound, setIsNotFound] = useState(false);
+
+    useEffect(() => {
+        const match = pathname.match(/\/todos\/(\d+)/);
+        if (match) {
+            setIsNotFound(Boolean(match[1] && !items[match[1]]));
+        }
+    }, [items, pathname]);
 
     const getActiveLinkClass = (href: string) => {
         const config: Record<string, string> = {
@@ -29,27 +39,12 @@ function NavigationBar(props: NavigationBarProps) {
 
     const handleAddTask = () => {
         // FIXME: remove after testing
-        // createTask({
-        //     locked: false,
-        //     completed: false,
-        //     cost: 10,
-        //     createdAt: '2025-03-15T18:48:29.356Z',
-        //     currency: 'SEK',
-        //     data: {
-        //         'data 1': 'task',
-        //         'data 2': 'task',
-        //     },
-        //     description:
-        //         '# Project Title\n\n## Introduction\n\nThis is a brief introduction to the project.\n\n## Features\n\n1. Feature one\n2. Feature two\n3. Feature three\n\n## Installation\n\nTo install the project, follow these steps:\n\n```bash\ngit clone https://github.com/your-repo/project.git\ncd project\nnpm install\n```\n\n## Usage\n\n- Step one\n- Step two\n- Step three\n',
-        //     parentId: null,
-        //     id: '0012',
-        //     title: 'Has 4 subtasks',
-        //     type: 'task',
-        //     updatedAt: '2025-03-15T18:48:29.356Z',
-        // });
     };
 
-    // TODO: Add Breadcrumbs
+    const filterCompleteTasks = (value: boolean) => {
+        setCompleteTasks(value);
+    };
+
     return (
         <Disclosure
             as={element}
@@ -67,15 +62,17 @@ function NavigationBar(props: NavigationBarProps) {
                             </Link>
                         </div>
 
-                        <SearchInput className="" />
+                        {!isNotFound && <SearchInput className="" />}
                     </nav>
                 </div>
             </div>
 
-            <Toolbar className="mx-auto max-w-3xl px-[20px] lg:px-4">
-                <Button title="Add task" variant="primary" onClick={handleAddTask} />
-                <Button title="Add task" onClick={handleAddTask} />
-            </Toolbar>
+            {!isNotFound && (
+                <Toolbar className="mx-auto max-w-3xl px-[20px] lg:px-4">
+                    <Toggle onChange={filterCompleteTasks} />
+                    <Button title="Add task" variant="primary" onClick={handleAddTask} />
+                </Toolbar>
+            )}
         </Disclosure>
     );
 }

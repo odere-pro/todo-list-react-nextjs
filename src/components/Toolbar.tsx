@@ -19,6 +19,8 @@ function Toolbar({ children, className }: ToolbarProps) {
     useEffect(() => {
         if (id && items && Object.keys(items).length > 0) {
             const card = items[id as string];
+            if (card === undefined) return;
+
             const title = card.parentId ? items[card.parentId].title : 'Todos';
             const url = card.parentId ? `/todos/${card.parentId}` : '/todos';
             setLinkData([title, url]);
