@@ -2,7 +2,11 @@ import type { Task, TaskId } from '@/types/Task';
 import type { Todos } from '@/types/Todos';
 import { moveTask } from '@/lib/utils/task';
 import { createStore } from 'zustand/vanilla';
-type RootState = Todos;
+
+interface RootState extends Todos {
+    loading: boolean;
+    hideComplete: boolean;
+}
 
 export type RootActions = {
     createTask: (data: Task, parentId?: TaskId) => void;
@@ -10,6 +14,7 @@ export type RootActions = {
     updateAllTasks: (data: Todos) => void;
     deleteTask: (id: TaskId) => void;
     deleteAllTask: () => void;
+    setCompleteTasks: (value: boolean) => void;
     moveTask: (id: TaskId, position: number) => void;
 };
 
@@ -18,6 +23,8 @@ export type RootStore = RootState & RootActions;
 export const defaultInitState: RootState = {
     items: {},
     topLevelTodos: [],
+    loading: true,
+    hideComplete: false,
 };
 
 export const createRootStore = (initState: RootState = defaultInitState) => {
@@ -133,10 +140,14 @@ export const createRootStore = (initState: RootState = defaultInitState) => {
                     topLevelTodos,
                 };
             }),
-    }));
-};
 
-export const rootStore = {
-    items: {},
-    topLevelTodos: [],
+        setCompleteTasks: (hideComplete: boolean) =>
+            set((state) => { 
+                return {
+                    ...state,
+                    hideComplete,
+                };
+            }
+        ),
+    }));
 };

@@ -16,11 +16,19 @@ export interface RootStoreProviderProps {
 
 export const RootStoreProvider = ({ children }: RootStoreProviderProps) => {
     const storeRef = useRef<RootStoreApi | null>(null);
-    const { todos } = useTodosApi();
+    const { todos, loading, fetchTodos } = useTodosApi();
 
     if (storeRef.current === null) {
         storeRef.current = createRootStore();
     }
+
+    useEffect(() => {
+        fetchTodos();
+    }, [fetchTodos]);
+
+    useEffect(() => {
+        storeRef.current?.setState({ loading });
+    }, [loading]);
 
     useEffect(() => {
         if (todos) {

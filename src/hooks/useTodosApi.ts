@@ -1,13 +1,40 @@
-import { useState, useEffect } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import type { Todos } from '@/types/Todos';
 
 const useTodosApi = () => {
-    const [todos, setTodos] = useState<Todos>();
+    const getFromLocalStorage = () => {
+        if (typeof window !== 'undefined') {
+            const savedTodos = localStorage.getItem('todos');
+            return savedTodos ? JSON.parse(savedTodos) : undefined;
+        }
+    };
+
+    const setToLocalStorage = (todos: Todos) => {
+        if (typeof window !== 'undefined' && todos) {
+            localStorage.setItem('todos', JSON.stringify(todos));
+        }
+    };
+
+    const [todos, setTodos] = useState<Todos>(getFromLocalStorage);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        const fetchTodos = async () => {
+        setToLocalStorage(todos);
+    }, [todos]);
+
+    const fetchTodos = useCallback(
+        async ({ silent = false, force = false } = {}) => {
+            if (!force && todos) {
+                setLoading(false);
+                console.info('Todos already fetched');
+                return;
+            }
+
+            if (!silent) {
+                setLoading(true);
+            }
+
             try {
                 const response = await fetch('/api/v1/todos');
                 if (!response.ok) {
@@ -19,14 +46,15 @@ const useTodosApi = () => {
                 setError((err as { message: string }).message);
                 console.error(err);
             } finally {
-                setLoading(false);
+                if (!silent) {
+                    setLoading(false);
+                }
             }
-        };
+        },
+        [todos]
+    );
 
-        fetchTodos();
-    }, []);
-
-    return { todos, loading, error };
+    return { todos, loading, error, fetchTodos };
 };
 
 export default useTodosApi;
