@@ -77,7 +77,7 @@ const Card = (props: Task) => {
                         }}
                     />
                     <div className="flex flex-wrap gap-2">
-                        <Button type="button" onClick={editTodo} title="Edit" />
+                        <Button type="button" onClick={editTodo} title="Lock" />
                     </div>
                 </div>
 

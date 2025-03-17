@@ -1,7 +1,6 @@
 'use client';
 
 import Breadcrumbs from '@/components/Breadcrumbs';
-import Button from '@/components/Button';
 import Link from 'next/link';
 import SearchInput from '@/components/SearchInput';
 import Toggle from '@/components/Toggle';
@@ -28,10 +27,6 @@ function NavigationBar(props: NavigationBarProps) {
         }
     }, [id, items]);
 
-    const handleAddTask = () => {
-        // FIXME: remove after testing
-    };
-
     const filterCompleteTasks = (value: boolean) => {
         hideCompletedTasks(value);
     };
@@ -43,35 +38,32 @@ function NavigationBar(props: NavigationBarProps) {
     return (
         <Disclosure
             as={element}
-            className={`flex flex-col gap-4 pb-4 text-neutral-900 dark:text-neutral-100 bg-neutral-50 dark:bg-neutral-900 ${className}`}
+            className={`flex flex-col gap-2 md:gap-4 pb-4 text-neutral-900 dark:text-neutral-100 bg-neutral-50 dark:bg-neutral-900 ${className}`}
         >
             <div className="bg-neutral-200 dark:bg-neutral-700">
                 <div className="mx-auto max-w-4xl px-[20px] lg:px-4">
                     <nav className="flex gap-4 h-16 justify-between items-center select-none">
-                        <div className="flex h-full">
+                        <div className="flex h-full items-center">
                             <Link
                                 href="/todos"
                                 className="inline-flex items-center px-2 text-md font-medium text-neutral-900 dark:text-neutral-100 hover:bg-neutral-300 dark:hover:bg-neutral-800 transition duration-300"
                             >
-                                <strong>Todo app</strong>
+                                <strong>Todo</strong>
+                                <strong className="hidden md:inline">app</strong>
                             </Link>
                         </div>
 
-                        {!isNotFound && <SearchInput onSearch={onSearch} />}
+                        {!isNotFound && (
+                            <div className="flex gap-2 items-center">
+                                <Toggle onChange={filterCompleteTasks} />
+                                <SearchInput onSearch={onSearch} />
+                            </div>
+                        )}
                     </nav>
                 </div>
             </div>
 
             <Breadcrumbs className="mx-auto max-w-4xl px-[20px] lg:px-4 w-full" />
-
-            {!isNotFound && (
-                <div className={`flex justify-between items-center w-full gap-4 ${className}`}>
-                    <div className="flex justify-end flex-1 gap-4 mx-auto max-w-3xl px-[20px] lg:px-4">
-                        <Toggle onChange={filterCompleteTasks} />
-                        <Button title="Add task" variant="primary" onClick={handleAddTask} />
-                    </div>
-                </div>
-            )}
         </Disclosure>
     );
 }

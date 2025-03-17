@@ -48,7 +48,6 @@ function Breadcrumbs({ className }: BreadcrumbsProps) {
         setPages(acc);
     }, [id, items, setPages]);
 
-
     const getActiveLinkClass = (active: boolean) => {
         const config: Record<string, string> = {
             active: 'text-indigo-600 dark:text-indigo-600',

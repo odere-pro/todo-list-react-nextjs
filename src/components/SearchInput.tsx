@@ -8,7 +8,7 @@ interface SearchInputProps {
 function SearchInput(props: SearchInputProps) {
     return (
         <div
-            className={`mt-1 relative flex w-xs md:w-md transition duration-300 bg-neutral-50/75 dark:bg-neutral-950/25 rounded-md ${props.className}`}
+            className={`relative flex w-[50vw] max-w-md transition duration-300 bg-neutral-50/75 dark:bg-neutral-950/25 rounded-md ${props.className}`}
         >
             <input
                 name="search"
@@ -19,7 +19,7 @@ function SearchInput(props: SearchInputProps) {
                         props.onSearch((e.target as HTMLInputElement).value);
                     }
                 }}
-                className="block flex-1 py-2 pr-9 pl-4 text-base text-neutral-900 dark:text-neutral-100 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                className="block flex-1 py-2 pr-9 pl-4 text-sm text-neutral-900 dark:text-neutral-100 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600"
             />
             <MagnifyingGlassIcon
                 aria-hidden="true"
