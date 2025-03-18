@@ -6,6 +6,7 @@ type ButtonType = 'submit' | 'reset' | 'button' | undefined;
 interface TodosListProps {
     onClick: () => void;
     title?: string;
+    className?: string;
     type?: ButtonType;
     variant?: ButtonVariant;
 }
@@ -20,10 +21,10 @@ export const getVariantClass = (type: string) => {
     return config[type] || config.default;
 };
 
-const Button = ({ type = 'button', onClick, variant = 'default', title = 'OK' }: TodosListProps) => {
+const Button = ({ type = 'button', onClick, variant = 'default', title = 'OK', className }: TodosListProps) => {
     return (
         <button
-            className={`relative inline-flex items-center rounded-md px-3 py-1 text-sm shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 transition duration-300 select-none cursor-pointer ${getVariantClass(variant)}`}
+            className={`relative min-w-14 inline-flex items-center justify-center rounded-md px-3 py-1 text-sm shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 transition duration-300 select-none cursor-pointer ${getVariantClass(variant)} ${className}`}
             onClick={onClick}
             onKeyDown={(e) => {
                 if (e.key === 'Enter') {
@@ -32,7 +33,7 @@ const Button = ({ type = 'button', onClick, variant = 'default', title = 'OK' }:
             }}
             type={type}
         >
-            {title}
+            <span>{title}</span>
         </button>
     );
 };
