@@ -1,10 +1,9 @@
 import TodosList from '@/components/TodosList';
 import { Suspense } from 'react';
+import TodoForm from '@/components/TodoForm';
 
 const TodoPage = async (props: { params: { id: string }; searchParams: { edit: string } }) => {
     const { id } = await props.params;
-    // const searchQuery = await props.searchParams;
-    // const isEditMode = Object.keys(searchQuery).includes('edit');
 
     return (
         <Suspense
@@ -14,8 +13,9 @@ const TodoPage = async (props: { params: { id: string }; searchParams: { edit: s
                 </div>
             }
         >
-            {/* {isEditMode ? <p>Edit</p> : <TodosList id={id} />} */}
-            <TodosList id={id} />
+            <TodoForm id={id}>
+                <TodosList id={id} />
+            </TodoForm>
         </Suspense>
     );
 };

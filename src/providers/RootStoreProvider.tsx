@@ -16,25 +16,23 @@ export interface RootStoreProviderProps {
 
 export const RootStoreProvider = ({ children }: RootStoreProviderProps) => {
     const storeRef = useRef<RootStoreApi | null>(null);
-    const { todos, loading, fetchTodos } = useTodosApi();
+    const { loading, fetchAll } = useTodosApi();
 
     if (storeRef.current === null) {
         storeRef.current = createRootStore();
     }
 
     useEffect(() => {
-        fetchTodos();
-    }, [fetchTodos]);
+        fetchAll().then((todos) => {
+            if (todos) {
+                storeRef.current?.setState(todos);
+            }
+        });
+    }, [fetchAll]);
 
     useEffect(() => {
         storeRef.current?.setState({ loading });
     }, [loading]);
-
-    useEffect(() => {
-        if (todos) {
-            storeRef.current?.setState(todos);
-        }
-    }, [todos]);
 
     return (
         <RootStoreContext.Provider value={storeRef.current}>

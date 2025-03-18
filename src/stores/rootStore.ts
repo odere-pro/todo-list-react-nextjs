@@ -70,9 +70,7 @@ export const createRootStore = (initState: RootState = defaultInitState) => {
                     topLevelTodos = topLevelTodos.filter((item) => item !== id);
                 }
 
-                delete data.id;
-
-                return {
+                const newState = {
                     ...state,
                     items: {
                         ...state.items,
@@ -83,6 +81,8 @@ export const createRootStore = (initState: RootState = defaultInitState) => {
                     },
                     topLevelTodos,
                 };
+
+                return newState;
             }),
 
         updateAllTasks: (data: Todos) => set(() => data),

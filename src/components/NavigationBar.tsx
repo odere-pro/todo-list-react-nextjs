@@ -55,7 +55,7 @@ function NavigationBar(props: NavigationBarProps) {
 
                         {!isNotFound && (
                             <div className="flex gap-2 items-center">
-                                <Toggle onChange={filterCompleteTasks} />
+                                <Toggle onChange={filterCompleteTasks} label="Hide complete" />
                                 <SearchInput onSearch={onSearch} />
                             </div>
                         )}

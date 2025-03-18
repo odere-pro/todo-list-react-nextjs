@@ -27,10 +27,6 @@ const typesConfig: Record<TaskType, TodoUIConfig> = {
     food: { label: 'Food', emoji: '🍏' },
 };
 
-export const getLockedClass = (locked: boolean) => {
-    return locked && 'pointer-events-none opacity-50';
-};
-
 const Card = (props: Task) => {
     const { setCompleteTask } = useRootStore((state) => state);
     const { createdAt, data, title, locked, completed, type, id, totalCost, currency, updatedAt, cost } = props;
@@ -41,14 +37,10 @@ const Card = (props: Task) => {
     const hoverClass =
         'hover:text-indigo-600 dark:hover:text-indigo-600 focus:text-indigo-600 dark:focus:text-indigo-600 transition duration-300';
 
-    const editTodo = () => {
-        window.location.href = `/todos/${id}?edit=true`;
-    };
-
     return (
-        <div className={`flex flex-col w-full ${getLockedClass(locked)}`}>
+        <div className={`flex flex-col w-full`}>
             <Link
-                className={`flex justify-between items-center gap-4 border-b-4 text-neutral-900 dark:text-neutral-100 border-neutral-400 dark:border-neutral-500 outline-none ${hoverClass}`}
+                className={`${locked && 'pointer-events-none opacity-50'} flex justify-between items-center gap-4 border-b-4 text-neutral-900 dark:text-neutral-100 border-neutral-400 dark:border-neutral-500 outline-none ${hoverClass}`}
                 href={`/todos/${id}`}
                 tabIndex={locked ? -1 : 0}
             >
@@ -77,11 +69,19 @@ const Card = (props: Task) => {
                         }}
                     />
                     <div className="flex flex-wrap gap-2">
-                        <Button type="button" onClick={editTodo} title="Lock" />
+                        <Button
+                            type="button"
+                            onClick={() => {
+                                console.log(locked ? 'Unlock' : 'Lock');
+                            }}
+                            title={locked ? 'Unlock' : 'Lock'}
+                        />
                     </div>
                 </div>
 
-                <div className="flex items-start gap-2 flex-wrap w-full">
+                <div
+                    className={`${locked && 'pointer-events-none opacity-50'} flex items-start gap-2 flex-wrap w-full`}
+                >
                     <Label value={taskLabel} type="info">
                         type: {taskLabel}
                     </Label>
@@ -96,7 +96,7 @@ const Card = (props: Task) => {
                 <SubtaskTree subtasks={props.subtasks || []} className="w-full" />
             </div>
 
-            <div className={`flex justify-between items-center gap-4`}>
+            <div className={`${locked && 'pointer-events-none opacity-50'} flex justify-between items-center gap-4`}>
                 <div className="flex gap-2">
                     <Label value={taskLabel} type="empty">
                         <span className="text-xs/5 text-gray-500 dark:text-neutral-400">
