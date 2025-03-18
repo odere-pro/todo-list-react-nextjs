@@ -1,12 +1,7 @@
-import { promises as fs } from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import type { Todos } from '@/types/Todos';
 import { getTask } from '@/lib/utils/task';
+import { readTodos, writeTodos, generateId } from '@/lib/utils/serverHelpers';
 import { NextRequest } from 'next/server';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
@@ -19,10 +14,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
             });
         }
 
-        const dataPath = path.join(__dirname, '..', 'data.json');
-        const data = await fs.readFile(dataPath, 'utf-8');
-        const todos: Todos = JSON.parse(data);
-
+        const todos = await readTodos();
         const todo = todos.items[id];
 
         if (!todo) {
@@ -55,11 +47,10 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
             });
         }
 
-        const dataPath = path.join(__dirname, '..', 'data.json');
-        const data = await fs.readFile(dataPath, 'utf-8');
-        const todos: Todos = JSON.parse(data);
+        const todos = await readTodos();
+        const todo = todos.items[id];
 
-        if (!todos.items[id]) {
+        if (!todo) {
             return new Response(JSON.stringify({ error: 'Not found' }), {
                 status: 404,
                 headers: { 'Content-Type': 'application/json' },
@@ -67,9 +58,13 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
         }
 
         delete todos.items[id];
-        todos.topLevelTodos = todos.topLevelTodos.filter((todoId) => todoId !== id);
 
-        await fs.writeFile(dataPath, JSON.stringify(todos, null, 2));
+        await writeTodos({
+            ...todos,
+            topLevelTodos: todos.topLevelTodos.filter((todoId) => todoId !== id),
+            timeStamp: new Date().toISOString(),
+            length: (todos?.length || 0) + 1,
+        });
 
         return new Response(JSON.stringify({ message: 'Deleted successfully' }), {
             status: 200,
@@ -83,35 +78,10 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     }
 }
 
-// FIXME: hack to get the next ID
-const getId = async (): Promise<string> => {
-    const idPath = path.join(__dirname, '..', 'id.json');
-    let idData;
-
-    try {
-        idData = await fs.readFile(idPath, 'utf-8');
-    } catch (error) {
-        if ((error as { code: string }).code === 'ENOENT') {
-            idData = JSON.stringify({ id: '0000' });
-            await fs.writeFile(idPath, idData);
-        } else {
-            throw error;
-        }
-    }
-
-    const idJson = JSON.parse(idData);
-    const newId = (parseInt(idJson.id, 10) + 1).toString().padStart(4, '0');
-    idJson.id = newId;
-
-    await fs.writeFile(idPath, JSON.stringify(idJson, null, 2));
-
-    return newId;
-};
-
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
         const parentId = (await params).id;
-        const id = await getId();
+        const id = await generateId();
 
         if (!parentId) {
             return new Response(JSON.stringify({ error: 'ID is required' }), {
@@ -120,26 +90,24 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
             });
         }
 
-        const dataPath = path.join(__dirname, '..', 'data.json');
         const payload = await request.json();
-        const data = await fs.readFile(dataPath, 'utf-8');
-        const todos: Todos = JSON.parse(data);
-
-        let topLevelTodos = [...todos.topLevelTodos];
+        const todos = await readTodos();
+        let topLevelTodos = [...todos?.topLevelTodos || []];
 
         if (!parentId && topLevelTodos.includes(id)) {
             topLevelTodos = topLevelTodos.filter((item) => item !== id);
         }
 
         delete payload.id;
+        const parentTodo = todos.items[parentId];
 
         const newTodos = {
             ...todos,
             items: {
                 ...todos.items,
                 [parentId]: {
-                    ...todos.items[parentId],
-                    subtasks: [id, ...(todos.items[parentId].subtasks || [])],
+                    ...parentTodo,
+                    subtasks: [id, ...(parentTodo.subtasks || [])],
                     updatedAt: new Date().toISOString(),
                 },
                 [id]: {
@@ -153,18 +121,11 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
             topLevelTodos,
         };
 
-        await fs.writeFile(
-            dataPath,
-            JSON.stringify(
-                {
-                    ...newTodos,
-                    timeStamp: new Date().toISOString(),
-                    length: (todos?.length || 0) + 1,
-                },
-                null,
-                2
-            )
-        );
+        await writeTodos({
+            ...newTodos,
+            timeStamp: new Date().toISOString(),
+            length: (todos?.length || 0) + 1,
+        });
 
         return new Response(JSON.stringify(newTodos.items[id]), {
             status: 201,
@@ -181,11 +142,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
         const id = (await params).id;
-        const dataPath = path.join(__dirname, '..', 'data.json');
         const payload = await request.json();
-        const data = await fs.readFile(dataPath, 'utf-8');
-        const todos: Todos = JSON.parse(data);
-        const todo = todos.items[id];
         const { parentId } = payload;
 
         if (parentId === id) {
@@ -194,6 +151,9 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
                 headers: { 'Content-Type': 'application/json' },
             });
         }
+
+        const todos = await readTodos();
+        const todo = todos.items[id];
 
         delete payload.id;
 
@@ -245,7 +205,11 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
             };
         }
 
-        await fs.writeFile(dataPath, JSON.stringify(newTodos, null, 2));
+        await writeTodos({
+            ...newTodos,
+            timeStamp: new Date().toISOString(),
+            length: (todos?.length || 0) + 1,
+        });
 
         return new Response(JSON.stringify(newTodos.items[id]), {
             status: 200,

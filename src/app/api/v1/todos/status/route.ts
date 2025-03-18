@@ -1,16 +1,8 @@
-import { promises as fs } from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import type { Todos } from '@/types/Todos';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import { readTodos } from '@/lib/utils/serverHelpers';
 
 export async function GET() {
     try {
-        const dataPath = path.join(__dirname, '..', 'data.json');
-        const data = await fs.readFile(dataPath, 'utf-8');
-        const todos: Todos = JSON.parse(data);
+        const todos = await readTodos();
 
         return new Response(
             JSON.stringify({
