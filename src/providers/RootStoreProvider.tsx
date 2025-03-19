@@ -23,11 +23,19 @@ export const RootStoreProvider = ({ children }: RootStoreProviderProps) => {
     }
 
     useEffect(() => {
-        fetchAll().then((todos) => {
+        const fetchTodos = async () => {
+            const todos = await fetchAll();
             if (todos) {
                 storeRef.current?.setState(todos);
+                console.log(todos)
             }
-        });
+        };
+
+        fetchTodos();
+        // TODO: implement exponential backoff strategy 
+        const intervalId = setInterval(fetchTodos, 2000);
+
+        return () => clearInterval(intervalId);
     }, [fetchAll]);
 
     useEffect(() => {

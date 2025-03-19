@@ -31,7 +31,7 @@ family for Vercel.
 ### Done Required
 
 - I as a user can create to-do items, such as a grocery list (**User can click buttons to add, delete, update new items**).
-- I as another user can collaborate in real-time with user - so that we can
+- I as another user can collaborate in real-time with user - so that we can (**long poling**)
 
 ### Done
 
