@@ -2,7 +2,11 @@ import TodosList from '@/components/TodosList';
 import { Suspense } from 'react';
 import TodoForm from '@/components/TodoForm';
 
-const TodoPage = async (props: { params: { id: string }; searchParams: { edit: string } }) => {
+interface PageProps {
+    params: Promise<{ id: string }>;
+}
+
+const TodoPage = async (props: PageProps) => {
     const { id } = await props.params;
 
     return (
