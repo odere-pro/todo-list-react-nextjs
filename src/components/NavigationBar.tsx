@@ -3,6 +3,7 @@
 import Breadcrumbs from '@/components/Breadcrumbs';
 import Link from 'next/link';
 import SearchInput from '@/components/SearchInput';
+// import UpdateSubscriber from '@/components/UpdateSubscriber';
 import Toggle from '@/components/Toggle';
 import useTaskId from '@/hooks/useTaskId';
 import { Disclosure } from '@headlessui/react';
@@ -59,6 +60,7 @@ function NavigationBar(props: NavigationBarProps) {
                                 <SearchInput onSearch={onSearch} />
                             </div>
                         )}
+                        {/* <UpdateSubscriber /> */}
                     </nav>
                 </div>
             </div>
