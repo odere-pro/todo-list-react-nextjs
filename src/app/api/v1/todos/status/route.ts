@@ -6,7 +6,6 @@ export async function GET() {
 
         return new Response(
             JSON.stringify({
-                length: todos.length,
                 timeStamp: todos.timeStamp,
             }),
             {
@@ -15,10 +14,16 @@ export async function GET() {
             }
         );
     } catch (error) {
-        return new Response(JSON.stringify({ error }), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' },
-        });
+        console.error(error);
+        return new Response(
+            JSON.stringify({
+                message: 'Failed to read task status',
+            }),
+            {
+                status: 500,
+                headers: { 'Content-Type': 'application/json' },
+            }
+        );
     }
 }
 

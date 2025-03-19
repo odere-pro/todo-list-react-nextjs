@@ -15,11 +15,16 @@ interface CostInputProps {
 }
 
 function CostInput({ currency, currencySet = CURRENCY, cost, onChange, inputId = 'cost', className }: CostInputProps) {
-    const [costValue, setCostValue] = useState(cost);
+    const [costValue, setCostValue] = useState('');
     const [currencyValue, setCurrencyValue] = useState(currency);
 
     useEffect(() => {
-        setCostValue(cost);
+        if (!cost) {
+            setCostValue('');
+            return;
+        }
+
+        setCostValue(`${cost}`);
     }, [cost]);
 
     useEffect(() => {
@@ -27,7 +32,11 @@ function CostInput({ currency, currencySet = CURRENCY, cost, onChange, inputId =
     }, [currency]);
 
     const handleCostChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setCostValue(parseFloat(e.target.value));
+        const value = e.target.value;
+        if (!/^\d+?$/.test(value) && value) {
+            return;
+        }
+        setCostValue(e.target.value);
         if (onChange) {
             onChange(parseFloat(e.target.value), currencyValue);
         }
@@ -36,7 +45,7 @@ function CostInput({ currency, currencySet = CURRENCY, cost, onChange, inputId =
     const handleCurrencyChange = (e: ChangeEvent<HTMLSelectElement>) => {
         setCurrencyValue(e.target.value);
         if (onChange) {
-            onChange(costValue, e.target.value);
+            onChange(parseFloat(costValue), e.target.value);
         }
     };
 

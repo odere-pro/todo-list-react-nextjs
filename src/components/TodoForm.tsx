@@ -34,7 +34,7 @@ const defaultState: FormData = {
 
 const TodoForm = (props: TodoFormProps) => {
     const data = useTodo(props.id);
-    const { loading, updateTask } = useRootStore((state) => state);
+    const { items, loading, updateTask } = useRootStore((state) => state);
     const [formData, setFormData] = useState<FormData>(defaultState);
     const [entries, setEntries] = useState<Entry[]>([]);
     const { updateById } = useTodosApi();
@@ -94,6 +94,14 @@ const TodoForm = (props: TodoFormProps) => {
         return (
             <div className="flex items-center justify-center flex-1">
                 <span>Loading...</span>
+            </div>
+        );
+    }
+
+    if (props.id && !items[props.id]) {
+        return (
+            <div className="flex items-center justify-center flex-1">
+                <span>404 - Task not found</span>
             </div>
         );
     }

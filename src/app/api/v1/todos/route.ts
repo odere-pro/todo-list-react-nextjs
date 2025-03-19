@@ -9,10 +9,16 @@ export async function GET() {
             headers: { 'Content-Type': 'application/json' },
         });
     } catch (error) {
-        return new Response(JSON.stringify(error), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' },
-        });
+        console.error(error);
+        return new Response(
+            JSON.stringify({
+                message: 'Failed to read all tasks',
+            }),
+            {
+                status: 500,
+                headers: { 'Content-Type': 'application/json' },
+            }
+        );
     }
 }
 
@@ -25,10 +31,16 @@ export async function DELETE() {
             headers: { 'Content-Type': 'application/json' },
         });
     } catch (error) {
-        return new Response(JSON.stringify({ error }), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' },
-        });
+        console.error(error);
+        return new Response(
+            JSON.stringify({
+                message: 'Failed to delete all tasks',
+            }),
+            {
+                status: 500,
+                headers: { 'Content-Type': 'application/json' },
+            }
+        );
     }
 }
 
@@ -64,7 +76,6 @@ export async function POST(request: Request) {
         await writeTodos({
             ...newTodos,
             timeStamp: new Date().toISOString(),
-            length: (todos?.length || 0) + 1,
         });
 
         return new Response(JSON.stringify(newTodos.items[id]), {
@@ -72,10 +83,16 @@ export async function POST(request: Request) {
             headers: { 'Content-Type': 'application/json' },
         });
     } catch (error) {
-        return new Response(JSON.stringify(error), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' },
-        });
+        console.error(error);
+        return new Response(
+            JSON.stringify({
+                message: 'Failed to create new task',
+            }),
+            {
+                status: 500,
+                headers: { 'Content-Type': 'application/json' },
+            }
+        );
     }
 }
 

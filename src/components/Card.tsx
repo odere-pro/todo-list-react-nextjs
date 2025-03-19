@@ -8,12 +8,7 @@ import SubtaskTree from '@/components/SubtaskTree';
 import { getMinutesAgo } from '@/lib/utils/time';
 import Link from 'next/link';
 import { useRootStore } from '@/providers/RootStoreProvider';
-// import Markdown from 'react-markdown';
-// import remarkGfm from 'remark-gfm';
-// import rehypeRaw from 'rehype-raw';
-// import rehypeSanitize from 'rehype-sanitize';
-// import remarkParse from 'remark-parse';
-// import remarkRehype from 'remark-rehype';
+import useTodosApi from '@/hooks/useTodosApi';
 
 interface TodoUIConfig {
     label: string;
@@ -27,15 +22,35 @@ const typesConfig: Record<TaskType, TodoUIConfig> = {
     food: { label: 'Food', emoji: '🍏' },
 };
 
-const Card = (props: Task) => {
-    const { setCompleteTask } = useRootStore((state) => state);
-    const { createdAt, data, title, locked, completed, type, id, totalCost, currency, updatedAt, cost } = props;
+const Card = (props: Task & { hidden?: boolean }) => {
+    const { setCompleteTask, deleteTask, updateTask, hideComplete } = useRootStore((state) => state);
+    const { deleteById, updateById } = useTodosApi();
+    const { createdAt, data, title, locked, completed, type, id, totalCost, currency, updatedAt, cost, hidden } = props;
     const emoji = typesConfig[type].emoji;
     const taskLabel = typesConfig[type].label;
     const time = updatedAt || createdAt;
     const minutesAgo = time && getMinutesAgo(time);
     const hoverClass =
         'hover:text-indigo-600 dark:hover:text-indigo-600 focus:text-indigo-600 dark:focus:text-indigo-600 transition duration-300';
+
+    const deleteTaskHandler = async () => {
+        deleteTask(id);
+        await deleteById(id);
+    };
+
+    const toggleLock = async () => {
+        updateTask(id, { locked: !locked });
+        await updateById(id, { locked: !locked });
+    };
+
+    const toggleComplete = async () => {
+        setCompleteTask(id, !completed);
+        await updateById(id, { completed: !completed });
+    };
+
+    if (hidden || (hideComplete && completed)) {
+        return null;
+    }
 
     return (
         <div className={`flex flex-col w-full`}>
@@ -60,21 +75,16 @@ const Card = (props: Task) => {
 
             <div className="flex flex-col items-start gap-4 max-w-4xl p-4 bg-neutral-200 dark:bg-neutral-700 rounded-bl-lg rounded-br-lg">
                 <div className="flex justify-between items-start gap-2 w-full">
-                    <Checkbox
-                        checked={completed}
-                        label="Completed"
-                        id={id}
-                        onChange={(value) => {
-                            setCompleteTask(id, value);
-                        }}
-                    />
+                    <Checkbox checked={completed} label="Completed" id={id} onChange={toggleComplete} />
                     <div className="flex flex-wrap gap-2">
+                        <Button type="button" onClick={toggleLock} title={locked ? 'Unlock' : 'Lock'} />
+
                         <Button
                             type="button"
-                            onClick={() => {
-                                console.log(locked ? 'Unlock' : 'Lock');
-                            }}
-                            title={locked ? 'Unlock' : 'Lock'}
+                            variant="danger"
+                            onClick={deleteTaskHandler}
+                            title="Delete"
+                            className={`${locked && 'pointer-events-none opacity-50'}`}
                         />
                     </div>
                 </div>
@@ -93,7 +103,7 @@ const Card = (props: Task) => {
                     ))}
                 </div>
 
-                <SubtaskTree subtasks={props.subtasks || []} className="w-full" />
+                <SubtaskTree subtasks={props?.subtasks || []} className="w-full" />
             </div>
 
             <div className={`${locked && 'pointer-events-none opacity-50'} flex justify-between items-center gap-4`}>
@@ -115,7 +125,7 @@ const Card = (props: Task) => {
                         </>
                     )}
                 </div>
-                {minutesAgo && (
+                {Boolean(minutesAgo) && (
                     <Label type="empty">
                         <time className="text-xs/5 text-gray-500 dark:text-neutral-400" dateTime={createdAt}>
                             Updated {minutesAgo} min ago

@@ -1,6 +1,11 @@
 import type { Task, TaskId } from '@/types/Task';
 import type { Todos } from '@/types/Todos';
-import { moveTask } from '@/lib/utils/task';
+import {
+    deleteTaskById,
+    completeTask,
+    updateTask as updateTaskHelper,
+    createTask as createTaskHelper,
+} from '@/lib/utils/storeHelpers';
 import { createStore } from 'zustand/vanilla';
 
 interface RootState extends Todos {
@@ -17,7 +22,6 @@ export type RootActions = {
     deleteTask: (id: TaskId) => void;
     deleteAllTask: () => void;
     hideCompletedTasks: (value: boolean) => void;
-    moveTask: (id: TaskId, position: number) => void;
     setSearchStr: (value?: string) => void;
     setCompleteTask: (id: TaskId, value: boolean) => void;
 };
@@ -34,135 +38,38 @@ export const defaultInitState: RootState = {
 export const createRootStore = (initState: RootState = defaultInitState) => {
     return createStore<RootStore>()((set) => ({
         ...initState,
-        createTask: (data: Task, parentId?: TaskId) =>
-            set((state) => {
-                let items = {
-                    ...state.items,
-                    [data.id]: data,
-                };
 
-                if (parentId) {
-                    let parent = state.items[parentId];
-                    parent = {
-                        ...parent,
-                        subtasks: [data.id, ...(parent.subtasks || [])],
-                    };
-
-                    items = {
-                        ...items,
-                        [parentId]: parent,
-                    };
-                }
-
-                return {
-                    ...state,
-                    items,
-                    topLevelTodos: !parentId ? [data.id, ...state.topLevelTodos] : state.topLevelTodos,
-                };
-            }),
+        createTask: (data: Task, parentId: TaskId | null = null) =>
+            set(({ items, topLevelTodos }) => createTaskHelper({ items, topLevelTodos }, { ...data, parentId })),
 
         updateTask: (id: TaskId, data: Partial<Task>) =>
-            set((state) => {
-                let topLevelTodos = [...state.topLevelTodos];
-                const { parentId } = data;
-
-                if (!parentId && topLevelTodos.includes(id)) {
-                    topLevelTodos = topLevelTodos.filter((item) => item !== id);
-                }
-
-                const newState = {
-                    ...state,
-                    items: {
-                        ...state.items,
-                        [id]: {
-                            ...state.items[id],
-                            ...data,
-                        },
-                    },
-                    topLevelTodos,
-                };
-
-                return newState;
-            }),
+            set(({ items, topLevelTodos }) => updateTaskHelper(id, { items, topLevelTodos }, data)),
 
         updateAllTasks: (data: Todos) => set(() => data),
 
-        deleteTask: (id: TaskId) =>
-            set((state) => {
-                const topLevelTodos = state.topLevelTodos.filter((item) => item !== id);
-                let items = { ...state.items };
-                const { parentId } = items[id];
-
-                if (parentId) {
-                    const parent = items[parentId];
-                    items = {
-                        ...items,
-                        [parentId]: {
-                            ...parent,
-                            subtasks: parent.subtasks?.filter((item) => item !== id),
-                        },
-                    };
-                }
-
-                delete items[id];
-
-                return {
-                    ...state,
-                    items,
-                    topLevelTodos,
-                };
-            }),
+        deleteTask: (id: TaskId) => set(({ items, topLevelTodos }) => deleteTaskById(id, { items, topLevelTodos })),
 
         deleteAllTask: () =>
-            set((state) => ({
-                ...state,
+            set(({ items, topLevelTodos }) => ({
+                ...{ items, topLevelTodos },
                 ...defaultInitState,
             })),
 
-        moveTask: (id: TaskId, position: number) =>
-            set((state) => {
-                let topLevelTodos: TaskId[] = [];
-                let items = { ...state.items };
-                const { parentId } = state.items[id];
-
-                if (parentId) {
-                    const parent = items[parentId];
-                    items = {
-                        ...items,
-                        [parentId]: {
-                            ...parent,
-                            subtasks: moveTask(id, position, parent.subtasks || []),
-                        },
-                    };
-                } else {
-                    topLevelTodos = moveTask(id, position, state.topLevelTodos);
-                }
-
-                return {
-                    ...state,
-                    items,
-                    topLevelTodos,
-                };
-            }),
-
         hideCompletedTasks: (hideComplete: boolean) =>
-            set((state) => {
+            set(({ items, topLevelTodos }) => {
                 return {
-                    ...state,
+                    ...{ items, topLevelTodos },
                     hideComplete,
                 };
             }),
 
         setSearchStr: (searchStr?: string) =>
-            set((state) => {
-                const items = { ...state.items };
-
-                Object.values(state.items).forEach((item: Task) => {
+            set(({ items, topLevelTodos }) => {
+                Object.values(items).forEach((item: Task) => {
                     const searchStrLower = searchStr?.toLowerCase() || '';
                     const matchesSearch =
                         item.id.toLowerCase().includes(searchStrLower) ||
-                        item.title.toLowerCase().includes(searchStrLower) ||
-                        item.description.toLowerCase().includes(searchStrLower);
+                        item.title.toLowerCase().includes(searchStrLower);
 
                     items[item.id] = {
                         ...item,
@@ -171,38 +78,12 @@ export const createRootStore = (initState: RootState = defaultInitState) => {
                 });
 
                 return {
-                    ...state,
                     items,
+                    topLevelTodos,
                     searchStr,
                 };
             }),
 
-        setCompleteTask: (id: TaskId, value: boolean) =>
-            set((state) => {
-                const completeSubtasks = (taskId: TaskId, items: Record<TaskId, Task & { hidden?: boolean }>) => {
-                    const task = items[taskId];
-                    if (task.subtasks) {
-                        task.subtasks.forEach((subtaskId) => {
-                            items[subtaskId].completed = value;
-                            completeSubtasks(subtaskId, items);
-                        });
-                    }
-                };
-
-                const items = {
-                    ...state.items,
-                    [id]: {
-                        ...state.items[id],
-                        completed: value,
-                    },
-                };
-
-                completeSubtasks(id, items);
-
-                return {
-                    ...state,
-                    items,
-                };
-            }),
+        setCompleteTask: (id: TaskId, value: boolean) => set((state) => completeTask(id, state, value)),
     }));
 };

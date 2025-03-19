@@ -1,7 +1,7 @@
 'use client';
 
 import Card from '@/components/Card';
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { useRootStore } from '@/providers/RootStoreProvider';
 import type { TaskId } from '@/types/Task';
 
@@ -10,7 +10,12 @@ interface TodoListProps {
 }
 
 const TodosList = ({ id }: TodoListProps) => {
-    const { items, topLevelTodos, loading, hideComplete } = useRootStore((state) => state);
+    const { items, topLevelTodos, loading } = useRootStore((state) => state);
+    const [todosIds, setTodosIds] = useState<TaskId[]>([]);
+
+    useEffect(() => {
+        setTodosIds(id ? items[id]?.subtasks || [] : topLevelTodos);
+    }, [id, items, topLevelTodos]);
 
     if (loading) {
         return (
@@ -19,16 +24,6 @@ const TodosList = ({ id }: TodoListProps) => {
             </div>
         );
     }
-
-    if (id && !items[id]) {
-        return (
-            <div className="flex items-center justify-center flex-1">
-                <span>404 - Task not found</span>
-            </div>
-        );
-    }
-
-    const todosIds = id ? items[id]?.subtasks || [] : topLevelTodos;
 
     if (todosIds.length === 0) {
         return (
@@ -41,19 +36,8 @@ const TodosList = ({ id }: TodoListProps) => {
     return (
         <ul role="list" className="w-full flex flex-col gap-4">
             {todosIds.map((id) => {
-                if (hideComplete) {
-                    return (
-                        !items[id].completed &&
-                        !items[id].hidden && (
-                            <li key={id}>
-                                <Card {...items[id]} />
-                            </li>
-                        )
-                    );
-                }
-
                 return (
-                    !items[id].hidden && (
+                    items[id] && (
                         <li key={id}>
                             <Card {...items[id]} />
                         </li>

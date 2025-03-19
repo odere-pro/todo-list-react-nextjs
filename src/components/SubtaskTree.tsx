@@ -13,21 +13,21 @@ export interface SubtaskTreeProps {
 const SubtaskTree = ({ subtasks, className }: SubtaskTreeProps) => {
     const { items } = useRootStore((state) => state);
 
-    if (!subtasks || subtasks.length === 0) return null;
+    if (!subtasks || subtasks?.length === 0) return null;
 
     return (
         <ul className={`flex flex-col text-sm gap-2 items-start ${className}`}>
-            {subtasks.map((id) => {
+            {subtasks?.map((id) => {
                 const todo = items[id];
 
                 if (!todo) return null;
 
                 const getSubtasksCount = (taskId: TaskId): number => {
                     const task = items[taskId];
-                    if (!task || !task.subtasks) return 0;
+                    if (!task || !task?.subtasks) return 0;
                     return (
-                        task.subtasks.length +
-                        task.subtasks.reduce((sum, subtaskId) => sum + getSubtasksCount(subtaskId), 0)
+                        task?.subtasks?.length +
+                        task?.subtasks?.reduce((sum, subtaskId) => sum + getSubtasksCount(subtaskId), 0)
                     );
                 };
 

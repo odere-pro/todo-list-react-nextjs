@@ -1,7 +1,7 @@
 import type { Todos } from '@/types/Todos';
-import { getTask } from '@/lib/utils/task';
 import { readTodos, writeTodos, generateId } from '@/lib/utils/serverHelpers';
 import { NextRequest } from 'next/server';
+import { deleteTaskById, updateTask, createTask } from '@/lib/utils/storeHelpers';
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
@@ -24,15 +24,21 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
             });
         }
 
-        return new Response(JSON.stringify(getTask(todo, todos.items)), {
+        return new Response(JSON.stringify(todo), {
             status: 200,
             headers: { 'Content-Type': 'application/json' },
         });
     } catch (error) {
-        return new Response(JSON.stringify({ error }), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' },
-        });
+        console.error(error);
+        return new Response(
+            JSON.stringify({
+                message: 'Failed to read task',
+            }),
+            {
+                status: 500,
+                headers: { 'Content-Type': 'application/json' },
+            }
+        );
     }
 }
 
@@ -57,13 +63,9 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
             });
         }
 
-        delete todos.items[id];
-
         await writeTodos({
-            ...todos,
-            topLevelTodos: todos.topLevelTodos.filter((todoId) => todoId !== id),
+            ...deleteTaskById(id, todos),
             timeStamp: new Date().toISOString(),
-            length: (todos?.length || 0) + 1,
         });
 
         return new Response(JSON.stringify({ message: 'Deleted successfully' }), {
@@ -71,10 +73,16 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
             headers: { 'Content-Type': 'application/json' },
         });
     } catch (error) {
-        return new Response(JSON.stringify({ error }), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' },
-        });
+        console.error(error);
+        return new Response(
+            JSON.stringify({
+                message: 'Failed to delete task',
+            }),
+            {
+                status: 500,
+                headers: { 'Content-Type': 'application/json' },
+            }
+        );
     }
 }
 
@@ -92,39 +100,21 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
         const payload = await request.json();
         const todos = await readTodos();
-        let topLevelTodos = [...todos?.topLevelTodos || []];
+        let topLevelTodos = [...(todos?.topLevelTodos || [])];
 
         if (!parentId && topLevelTodos.includes(id)) {
             topLevelTodos = topLevelTodos.filter((item) => item !== id);
         }
 
-        delete payload.id;
-        const parentTodo = todos.items[parentId];
-
-        const newTodos = {
-            ...todos,
-            items: {
-                ...todos.items,
-                [parentId]: {
-                    ...parentTodo,
-                    subtasks: [id, ...(parentTodo.subtasks || [])],
-                    updatedAt: new Date().toISOString(),
-                },
-                [id]: {
-                    ...payload,
-                    id,
-                    parentId,
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString(),
-                },
-            },
-            topLevelTodos,
-        };
+        const newTodos = createTask(todos, {
+            ...payload,
+            id,
+            parentId,
+        });
 
         await writeTodos({
             ...newTodos,
             timeStamp: new Date().toISOString(),
-            length: (todos?.length || 0) + 1,
         });
 
         return new Response(JSON.stringify(newTodos.items[id]), {
@@ -132,10 +122,16 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
             headers: { 'Content-Type': 'application/json' },
         });
     } catch (error) {
-        return new Response(JSON.stringify(error), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' },
-        });
+        console.error(error);
+        return new Response(
+            JSON.stringify({
+                message: 'Failed to create task',
+            }),
+            {
+                status: 500,
+                headers: { 'Content-Type': 'application/json' },
+            }
+        );
     }
 }
 
@@ -153,62 +149,11 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
         }
 
         const todos = await readTodos();
-        const todo = todos.items[id];
-
-        delete payload.id;
-
-        let newTodos: Todos = {
-            ...todos,
-            items: {
-                ...todos.items,
-                [id]: {
-                    ...todos.items[id],
-                    ...payload,
-                    updatedAt: new Date().toISOString(),
-                },
-            },
-            timeStamp: new Date().toISOString(),
-        };
-
-        if (parentId) {
-            const parentTodo = newTodos.items[parentId];
-            newTodos = {
-                ...newTodos,
-                items: {
-                    ...newTodos.items,
-                    [parentId]: {
-                        ...parentTodo,
-                        subtasks: [id, ...(parentTodo.subtasks || [])],
-                        updatedAt: new Date().toISOString(),
-                    },
-                },
-            };
-        }
-
-        if (todo.parentId) {
-            const parentTodo = newTodos.items[todo.parentId];
-            newTodos = {
-                ...newTodos,
-                items: {
-                    ...newTodos.items,
-                    [todo.parentId]: {
-                        ...parentTodo,
-                        subtasks: parentTodo.subtasks?.filter((item) => item !== id),
-                        updatedAt: new Date().toISOString(),
-                    },
-                },
-            };
-        } else {
-            newTodos = {
-                ...newTodos,
-                topLevelTodos: newTodos.topLevelTodos.filter((item) => item !== id),
-            };
-        }
+        const newTodos: Todos = updateTask(id, todos, payload);
 
         await writeTodos({
             ...newTodos,
             timeStamp: new Date().toISOString(),
-            length: (todos?.length || 0) + 1,
         });
 
         return new Response(JSON.stringify(newTodos.items[id]), {
@@ -216,10 +161,16 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
             headers: { 'Content-Type': 'application/json' },
         });
     } catch (error) {
-        return new Response(JSON.stringify(error), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' },
-        });
+        console.error(error);
+        return new Response(
+            JSON.stringify({
+                message: 'Failed to update task',
+            }),
+            {
+                status: 500,
+                headers: { 'Content-Type': 'application/json' },
+            }
+        );
     }
 }
 
