@@ -10,7 +10,7 @@ import { useRootStore } from '@/providers/RootStoreProvider';
 import useTodosApi from '@/hooks/useTodosApi';
 
 interface TodoFormProps {
-    id: TaskId;
+    id?: TaskId;
     children?: React.ReactNode;
 }
 
@@ -26,8 +26,8 @@ const defaultState: FormData = {
 
 const TodoForm = (props: TodoFormProps) => {
     const data = useTodo(props.id);
-    const { items, loading, updateTask, deleteTask } = useRootStore((state) => state);
-    const { updateById, deleteById } = useTodosApi();
+    const { items, loading, updateTask, deleteTask, createTask } = useRootStore((state) => state);
+    const { updateById, deleteById, create } = useTodosApi();
     const [formData, setFormData] = useState<FormData>(defaultState);
 
     const onTitleChange = (title: string) => {
@@ -46,19 +46,39 @@ const TodoForm = (props: TodoFormProps) => {
         setFormData({ ...formData, type });
     };
 
-    const handleSubmit = async () => {
-        const data = await updateById(props.id, formData);
+    const newTask = async () => {
+        if (props.id) {
+            updateTask(props.id, formData);
+            await updateById(props.id, formData);
+        } else {
+            const data = await create(formData);
+            if (data) {
+                createTask(data);
+            }
+        }
+    };
+
+    const newSubTask = async () => {
+        if (!props.id) return;
+        const data = await create({
+            ...formData,
+            parentId: props.id,
+            completed: false,
+            subtasks: [],
+        });
         if (data) {
-            updateTask(props.id, data);
+            createTask(data, props.id);
         }
     };
 
     const deleteTaskHandler = async () => {
-        const parentId = items[props.id]?.parentId;
-        deleteTask(props.id);
-        await deleteById(props.id);
+        if (props.id) {
+            const parentId = items[props.id]?.parentId;
+            deleteTask(props.id);
+            await deleteById(props.id);
 
-        window.location.href = parentId ? `/todos/${parentId}` : '/todos';
+            window.location.href = parentId ? `/todos/${parentId}` : '/todos';
+        }
     };
 
     useEffect(() => {
@@ -85,11 +105,15 @@ const TodoForm = (props: TodoFormProps) => {
 
     return (
         <>
-            <div className="flex justify-between items-center">
-                <Button variant="danger" title="Delete" onClick={deleteTaskHandler} />
+            <div className={`flex justify-between items-center ${!props?.id && 'justify-end'}`}>
+                {props?.id && (
+                    <div>
+                        <Button variant="danger" title="Delete" onClick={deleteTaskHandler} />
+                    </div>
+                )}
                 <div className="flex gap-4 justify-end mt-2 py-2">
-                    <Button title="Add Todo" onClick={handleSubmit} />
-                    <Button variant="primary" title="Save" onClick={handleSubmit} />
+                    {props?.id && <Button title="Create subtask" onClick={newSubTask} />}
+                    <Button variant="primary" title={!props?.id ? 'New' : 'Save'} onClick={newTask} />
                 </div>
             </div>
 
@@ -131,7 +155,11 @@ const TodoForm = (props: TodoFormProps) => {
                         currencySet={CURRENCY}
                         inputId={`cost-${props.id}`}
                         onChange={onCostChange}
-                        label={`Total cost: ${items[props.id]?.totalCost} ${items[props.id]?.currency}`}
+                        label={
+                            !props?.id
+                                ? 'Cost'
+                                : `Total cost: ${items[props.id]?.totalCost} ${items[props.id]?.currency}`
+                        }
                     />
                     <SelectInput
                         className="w-36"

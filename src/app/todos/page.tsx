@@ -1,4 +1,5 @@
 import TodosList from '@/components/TodosList';
+import TodoForm from '@/components/TodoForm';
 import { Suspense } from 'react';
 
 const TodosPage = async () => {
@@ -10,7 +11,9 @@ const TodosPage = async () => {
                 </div>
             }
         >
-            <TodosList />
+            <TodoForm>
+                <TodosList />
+            </TodoForm>
         </Suspense>
     );
 };

@@ -15,7 +15,15 @@ interface CostInputProps {
     onChange?: (cost: number, currency: string) => void;
 }
 
-function CostInput({ currency, currencySet = CURRENCY, cost, onChange, inputId = 'cost', className, label }: CostInputProps) {
+function CostInput({
+    currency,
+    currencySet = CURRENCY,
+    cost,
+    onChange,
+    inputId = 'cost',
+    className,
+    label,
+}: CostInputProps) {
     const [costValue, setCostValue] = useState('');
     const [currencyValue, setCurrencyValue] = useState(currency);
 
