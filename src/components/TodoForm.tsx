@@ -6,7 +6,6 @@ import useTodo from '@/hooks/useTodo';
 import Button from '@/components/Button';
 import CostInput, { CURRENCY } from '@/components/CostInput';
 import SelectInput, { OPTIONS } from '@/components/SelectInput';
-import DataBlock, { type Entry } from '@/components/DataBlock';
 import { useRootStore } from '@/providers/RootStoreProvider';
 import useTodosApi from '@/hooks/useTodosApi';
 
@@ -16,13 +15,6 @@ interface TodoFormProps {
 }
 
 type FormData = Pick<Task, 'title' | 'description' | 'cost' | 'currency' | 'type' | 'data'>;
-const dataPresets: Record<TaskType, string[]> = {
-    todo: [],
-    task: ['priority', 'deadline'],
-    'shopping-item': ['brand', 'notes'],
-    food: ['calories', 'ingredients'],
-};
-
 const defaultState: FormData = {
     title: '',
     description: '',
@@ -34,10 +26,9 @@ const defaultState: FormData = {
 
 const TodoForm = (props: TodoFormProps) => {
     const data = useTodo(props.id);
-    const { items, loading, updateTask } = useRootStore((state) => state);
+    const { items, loading, updateTask, deleteTask } = useRootStore((state) => state);
+    const { updateById, deleteById } = useTodosApi();
     const [formData, setFormData] = useState<FormData>(defaultState);
-    const [entries, setEntries] = useState<Entry[]>([]);
-    const { updateById } = useTodosApi();
 
     const onTitleChange = (title: string) => {
         setFormData({ ...formData, title });
@@ -55,10 +46,6 @@ const TodoForm = (props: TodoFormProps) => {
         setFormData({ ...formData, type });
     };
 
-    const onDataChange = (data: FormData['data']) => {
-        setFormData({ ...formData, data });
-    };
-
     const handleSubmit = async () => {
         const data = await updateById(props.id, formData);
         if (data) {
@@ -66,29 +53,19 @@ const TodoForm = (props: TodoFormProps) => {
         }
     };
 
+    const deleteTaskHandler = async () => {
+        const parentId = items[props.id]?.parentId;
+        deleteTask(props.id);
+        await deleteById(props.id);
+
+        window.location.href = parentId ? `/todos/${parentId}` : '/todos';
+    };
+
     useEffect(() => {
         if (data.todo) {
             setFormData(data.todo || defaultState);
         }
     }, [data.todo]);
-
-    useEffect(() => {
-        const getDataEntries = (): Entry[] => {
-            let state: Entry[] = dataPresets[formData.type].map((key) => [key, formData.data[key] || '']);
-
-            Object.entries(formData.data).forEach(([key, value]: Entry) => {
-                if (!dataPresets[formData.type].includes(key)) {
-                    state = [...state, [key, value]] as Entry[];
-                }
-            });
-            state = state.length ? state : [];
-
-            return state;
-        };
-
-        const newEntires = getDataEntries();
-        setEntries(newEntires);
-    }, [formData.data, formData.type]);
 
     if (loading) {
         return (
@@ -108,9 +85,12 @@ const TodoForm = (props: TodoFormProps) => {
 
     return (
         <>
-            <div className="flex gap-4 justify-end mt-2 py-2">
-                <Button variant="primary" title="Add Todo" onClick={handleSubmit} />
-                <Button variant="primary" title="Save" onClick={handleSubmit} />
+            <div className="flex justify-between items-center">
+                <Button variant="danger" title="Delete" onClick={deleteTaskHandler} />
+                <div className="flex gap-4 justify-end mt-2 py-2">
+                    <Button title="Add Todo" onClick={handleSubmit} />
+                    <Button variant="primary" title="Save" onClick={handleSubmit} />
+                </div>
             </div>
 
             <form className="flex flex-col gap-4 text-neutral-900 dark:text-neutral-100">
@@ -151,6 +131,7 @@ const TodoForm = (props: TodoFormProps) => {
                         currencySet={CURRENCY}
                         inputId={`cost-${props.id}`}
                         onChange={onCostChange}
+                        label={`Total cost: ${items[props.id]?.totalCost} ${items[props.id]?.currency}`}
                     />
                     <SelectInput
                         className="w-36"
@@ -160,10 +141,6 @@ const TodoForm = (props: TodoFormProps) => {
                         inputId={`type-${props.id}`}
                         onChange={onTypeChange}
                     />
-                </fieldset>
-
-                <fieldset className="flex flex-col">
-                    <DataBlock className="w-full" data={entries} onChange={onDataChange} />
                 </fieldset>
             </form>
 

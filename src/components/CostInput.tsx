@@ -11,10 +11,11 @@ interface CostInputProps {
     currencySet?: string[];
     currency: string;
     className?: string;
+    label?: string;
     onChange?: (cost: number, currency: string) => void;
 }
 
-function CostInput({ currency, currencySet = CURRENCY, cost, onChange, inputId = 'cost', className }: CostInputProps) {
+function CostInput({ currency, currencySet = CURRENCY, cost, onChange, inputId = 'cost', className, label }: CostInputProps) {
     const [costValue, setCostValue] = useState('');
     const [currencyValue, setCurrencyValue] = useState(currency);
 
@@ -52,7 +53,7 @@ function CostInput({ currency, currencySet = CURRENCY, cost, onChange, inputId =
     return (
         <div className={`flex flex-col ${className}`}>
             <label htmlFor={inputId} className="block text-xs/5 text-gray-500 dark:text-neutral-400">
-                Cost
+                {label}
             </label>
             <div className="flex items-center rounded-md bg-neutral-50/75 dark:bg-neutral-950/25 pl-3 outline-1 -outline-offset-1 outline-gray-300 dark:outline-gray-500 has-[input:focus-within]:outline-2 has-[input:focus-within]:-outline-offset-2 has-[input:focus-within]:outline-indigo-600">
                 <div className="shrink-0 text-base text-neutral-900 dark:text-neutral-100 select-none sm:text-sm/6">

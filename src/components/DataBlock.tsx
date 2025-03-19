@@ -3,22 +3,30 @@
 import { useState, useEffect } from 'react';
 import Input from '@/components/Input';
 import Button from '@/components/Button';
+import type { TaskId } from '@/types/Task';
 
 export type Entry = [key: string, value: string];
 
 interface DataBlockProps {
+    type?: TaskId;
     className?: string;
     data?: Entry[];
     onChange?(data: Record<string, string>): void;
 }
 
-function DataBlock({ className, data = [], onChange }: DataBlockProps) {
-    const emptyValue: Entry = ['', ''];
+const dataPresets: Record<TaskId, Entry> = {
+    todo: ['', ''],
+    task: ['task', 'name: deadline: '],
+    food: ['calories', ' - kCal'],
+    'shopping-item': ['item', 'price:'],
+};
 
+// TODO: Implement the DataBlock component,  need more testing
+function DataBlock({ className, data = [], onChange, type = 'todo' }: DataBlockProps) {
     const [entries, setEntries] = useState<Entry[]>(data);
 
     const addEntry = () => {
-        setEntries([emptyValue, ...entries]);
+        setEntries([dataPresets[type], ...entries]);
         setTimeout(() => {
             const lastKeyInput = document.getElementById(`entry-${0}-key`);
             lastKeyInput?.focus();
@@ -26,7 +34,7 @@ function DataBlock({ className, data = [], onChange }: DataBlockProps) {
     };
 
     const getRemoveEntry = (index: number) => () => {
-        const newEntries = entries.filter((_, i) => i !== index);
+        const newEntries = [...entries.slice(0, index), ...entries.slice(index + 1)];
         setEntries(newEntries);
     };
 
@@ -66,7 +74,7 @@ function DataBlock({ className, data = [], onChange }: DataBlockProps) {
             </div>
 
             {entries.map(([key, value], index) => (
-                <div key={`entry-${index}-${key}`} className="flex flex-wrap gap-4 items-end">
+                <div key={`entry-${index}`} className="flex flex-wrap gap-4 items-end">
                     <Input
                         inputId={`entry-${index}-key`}
                         className="w-36"
